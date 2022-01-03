@@ -1,0 +1,26 @@
+{
+  "paf": {
+    "username": "paf",
+    "password": "555Paff!",
+    "favorites": {}
+  },
+  "Natalia": {
+    "username": "Natalia",
+    "password": "Natalia132785!",
+    "favorites": {
+      "Shirt": {
+        "name": "Shirt",
+        "price": 20.0,
+        "category": "Moda",
+        "date": "дек 24, 2021",
+        "ownerName": "paf",
+        "active": true
+      }
+    }
+  },
+  "Presli": {
+    "username": "Presli",
+    "password": "12345Paf!",
+    "favorites": {}
+  }
+}

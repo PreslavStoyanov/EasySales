@@ -1,0 +1,35 @@
+{
+  "Trousers": {
+    "name": "Trousers",
+    "price": 10.0,
+    "category": "Moda",
+    "date": "дек 26, 2021",
+    "ownerName": "Natalia",
+    "active": true
+  },
+  "Shirt": {
+    "name": "Shirt",
+    "price": 20.0,
+    "category": "Moda",
+    "date": "дек 24, 2021",
+    "ownerName": "paf",
+    "active": true
+  },
+  "Socks": {
+    "name": "Socks",
+    "price": 5.0,
+    "category": "Moda",
+    "date": "дек 28, 2021",
+    "ownerName": "paf",
+    "active": false,
+    "dateOfDeactivation": "дек 29, 2021"
+  },
+  "iPhone": {
+    "name": "iPhone",
+    "price": 1599.99,
+    "category": "Mobile",
+    "date": "дек 29, 2021",
+    "ownerName": "Natalia",
+    "active": true
+  }
+}
