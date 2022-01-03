@@ -73,7 +73,7 @@ public class Article {
         updateFiles("Catalogue.json", catalogue);
     }
 
-    public String getActiveteMessage() {
+    public String getActivateMessage() {
         String message;
         if (this.active) {
             message = "Active";

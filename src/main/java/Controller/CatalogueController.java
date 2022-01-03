@@ -48,7 +48,7 @@ public class CatalogueController {
         for (Map.Entry<String, Article> article : map.entrySet()) {
             if (article.getValue().getDate().after(dateAfter) && article.getValue().getDate().before(dateBefore)) {
                 System.out.printf("%s | %.2f lv. | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
-                        article.getValue().getCategory(), article.getValue().getActiveteMessage(), article.getValue().getOwnerName());
+                        article.getValue().getCategory(), article.getValue().getActivateMessage(), article.getValue().getOwnerName());
             }
         }
     }
@@ -107,16 +107,19 @@ public class CatalogueController {
         }
         for (Map.Entry<String, Article> article : map.entrySet()) {
             System.out.printf("%s | %.2f lv. | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
-                    article.getValue().getCategory(), article.getValue().getActiveteMessage(), article.getValue().getOwnerName());
+                    article.getValue().getCategory(), article.getValue().getActivateMessage(), article.getValue().getOwnerName());
         }
         System.out.println();
     }
 
-    public static void showArticlesByUser(String userName) {
+    public static void showArticlesByUser(String userName, LinkedHashMap<String, Article> ownArticles) {
+        if (ownArticles.isEmpty()) {
+            System.out.println("No articles!");
+        }
         for (Map.Entry<String, Article> article : catalogue.entrySet()) {
             if (article.getValue().getOwnerName().equals(userName)) {
                 System.out.printf("%s | %.2f lv. | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
-                        article.getValue().getCategory(), article.getValue().getActiveteMessage());
+                        article.getValue().getCategory(), article.getValue().getActivateMessage());
             }
         }
     }
