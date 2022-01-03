@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ProjectSAP.iml" filepath="$PROJECT_DIR$/ProjectSAP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EasySales.iml" filepath="$PROJECT_DIR$/EasySales.iml" />
     </modules>
   </component>
 </project>
