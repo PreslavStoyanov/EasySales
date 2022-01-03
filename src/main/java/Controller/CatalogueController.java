@@ -9,12 +9,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static Controller.FileController.updateFiles;
 import static Controller.UserController.users;
 
 public class CatalogueController {
     public static LinkedHashMap<String, Article> catalogue = new LinkedHashMap<>();
+
+    public static boolean isValidDateFormat (String date) {
+        Pattern pattern = Pattern.compile("[0-9]{2}:[0-9]{2}:[0-9]{4}");
+        Matcher matcher = pattern.matcher(date);
+        return matcher.matches();
+
+    }
 
     public static Date getDate(String stringDate) {
         Date date = null;

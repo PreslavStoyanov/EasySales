@@ -19,9 +19,8 @@ public class View {
             ReadFiles();
             showMenu();
             switch (sc.nextInt()) {
-                case 1 -> { //'Register'
-                    Register(sc);
-                }
+                case 1 -> Register(sc);
+
                 case 2 -> { //'Log In'
                     System.out.print("Insert username: ");
                     String username = sc.next();
@@ -35,42 +34,23 @@ public class View {
                         boolean logInMenuWhile = true;
                         while (logInMenuWhile) {
                             LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
-
-                            System.out.println("To see all Articles press '1'.");
-                            System.out.println("To see your Account press '2'.");
-                            System.out.println("To log out press '0'.");
+                            showLoginMenu();
                             switch (sc.nextInt()) {
                                 case 1 -> {
                                     showArticlesFrom(activeCatalogue);
                                     boolean articleMenuWhile = true;
                                     while (articleMenuWhile) {
-                                        System.out.println("To filter them by date press '1'");
-                                        System.out.println("To add article in favourites press '2'");
-                                        System.out.println("To buy an Article press '3'.");
-                                        System.out.println("To sell an Article press '4'.");
-                                        System.out.println("To go back press '0'");
+                                        showArticlesMenu();
                                         switch (sc.nextInt()) {
-                                            case 1 -> {
-                                                String stringAfterDate = null;
-                                                String stringBeforeDate = null;
-                                                try {
-                                                    System.out.print("After (DD:MM:YYYY): ");
-                                                    stringAfterDate = sc.next("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-                                                    System.out.print("Before (DD:MM:YYYY): ");
-                                                    stringBeforeDate = sc.next("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-                                                } catch (InputMismatchException e) {
-                                                    sc.next("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-                                                }
-                                                Date after = getDate(stringAfterDate);
-                                                Date before = getDate(stringBeforeDate);
-                                                showArticlesByDateFrom(after, before, activeCatalogue);
-                                            } //to filter them by date
+                                            case 1 -> filterByDate(sc, activeCatalogue);
+                                             //to filter them by date
                                             case 2 -> {
                                                 showArticlesFrom(activeCatalogue);
                                                 System.out.print("Name of article: ");
                                                 String nameOfArticle = sc.next();
                                                 if (containsArticle(nameOfArticle, activeCatalogue)) {
                                                     addIfNotInFavourites(user, favorites, nameOfArticle);
+                                                    System.out.println("Added successful!");
                                                 } else {
                                                     System.out.println("No such article!");
                                                 }
@@ -253,7 +233,7 @@ public class View {
                                 case 0 -> logInMenuWhile = false;
                             }
                         }
-                    } else if (administrators.containsKey(username) && checkUserPassword(password, users.get(username))) {
+                    } else if (administrators.containsKey(username) && checkAdministratorPassword(password, administrators.get(username))) {
                         System.out.printf("Welcome %s! %n", username);
                         Administrator administrator = administrators.get(username);
 
@@ -274,15 +254,7 @@ public class View {
                                         System.out.println("To filter them by date press '1'");
                                         System.out.println("To go back press '0'");
                                         switch (sc.nextInt()) {
-                                            case 1 -> {
-                                                System.out.print("After (DD:MM:YYYY): ");
-                                                String stringDate = sc.next("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-                                                Date after = getDate(stringDate);
-                                                System.out.print("Before (DD:MM:YYYY): ");
-                                                stringDate = sc.next("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-                                                Date before = getDate(stringDate);
-                                                showArticlesByDateFrom(after, before, activeCatalogue);
-                                            }
+                                            case 1 -> filterByDate(sc, activeCatalogue);
                                             case 0 -> activeCatalogueMenu = false;
                                         }
                                     }
@@ -294,15 +266,7 @@ public class View {
                                         System.out.println("To filter them by deactivation date press '1'");
                                         System.out.println("To go back press '0'");
                                         switch (sc.nextInt()) {
-                                            case 1 -> {
-                                                System.out.print("After (DD:MM:YYYY): ");
-                                                String stringDate = sc.next("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-                                                Date after = getDate(stringDate);
-                                                System.out.print("Before (DD:MM:YYYY): ");
-                                                stringDate = sc.next("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-                                                Date before = getDate(stringDate);
-                                                showArticlesByDeactivationDateFrom(after, before, inactiveCatalogue);
-                                            }
+                                            case 1 -> filterByDeactivationDate(sc, inactiveCatalogue);
                                             case 0 -> inactiveCatalogueMenu = false;
                                         }
                                     }
@@ -432,6 +396,54 @@ public class View {
         }
     }
 
+    private static void filterByDate(Scanner sc, LinkedHashMap<String, Article> catalogue) {
+        System.out.print("After (DD:MM:YYYY): ");
+        String afterDate = sc.next();
+        System.out.print("Before (DD:MM:YYYY): ");
+        String beforeDate = sc.next();
+        if (isValidDateFormat(afterDate) && isValidDateFormat(beforeDate)) {
+            Date after = getDate(afterDate);
+            Date before = getDate(beforeDate);
+            showArticlesByDateFrom(after, before, catalogue);
+        } else {
+            System.out.println("This is invalid format! Try again!");
+        }
+    }
+
+    private static void filterByDeactivationDate(Scanner sc, LinkedHashMap<String, Article> catalogue) {
+        System.out.print("After (DD:MM:YYYY): ");
+        String afterDate = sc.next();
+        System.out.print("Before (DD:MM:YYYY): ");
+        String beforeDate = sc.next();
+        if (isValidDateFormat(afterDate) && isValidDateFormat(beforeDate)) {
+            Date after = getDate(afterDate);
+            Date before = getDate(beforeDate);
+            showArticlesByDeactivationDateFrom(after, before, catalogue);
+        } else {
+            System.out.println("This is invalid format! Try again!");
+        }
+    }
+
+    private static void showArticlesMenu() {
+        System.out.println("To filter them by date press '1'");
+        System.out.println("To add article in favourites press '2'");
+        System.out.println("To buy an Article press '3'.");
+        System.out.println("To sell an Article press '4'.");
+        System.out.println("To go back press '0'");
+    }
+
+    private static void showLoginMenu() {
+        System.out.println("To see all Articles press '1'.");
+        System.out.println("To see your Account press '2'.");
+        System.out.println("To log out press '0'.");
+    }
+
+    private static void showMenu() {
+        System.out.println("For 'Register' press '1'.");
+        System.out.println("For 'Log In' press '2'.");
+        System.out.println("To 'Exit' press '0'.");
+    }
+
     private static void Register(Scanner sc) throws IOException, InvalidPasswordException {
         System.out.print("Insert username: ");
         String username = sc.next();
@@ -444,12 +456,6 @@ public class View {
         String password = sc.next();
         registerUser(username, password);
         System.out.println("Registration successful!");
-    }
-
-    private static void showMenu() {
-        System.out.println("For 'Register' press '1'.");
-        System.out.println("For 'Log In' press '2'.");
-        System.out.println("To 'Exit' press '0'.");
     }
 
     private static void ReadFiles() throws IOException {
