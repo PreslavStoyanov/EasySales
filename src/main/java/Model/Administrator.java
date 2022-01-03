@@ -10,7 +10,7 @@ import static Constants.BasicConstants.CATEGORIES_JSON;
 import static Controller.AdministratorController.administrators;
 import static Controller.AdministratorController.categories;
 import static Controller.FileController.updateFiles;
-import static Controller.UserController.isValidPassword;
+import static Utilities.PasswordValidator.isValidPassword;
 
 public class Administrator {
     private String username;

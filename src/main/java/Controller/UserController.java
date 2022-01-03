@@ -1,7 +1,6 @@
 package Controller;
 
 import Exceptions.InvalidPasswordException;
-import Utilities.PasswordValidator;
 import Model.User;
 
 import java.io.IOException;
@@ -9,8 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static Constants.BasicConstants.USERS_JSON;
-import static Controller.AdministratorController.administrators;
 import static Controller.FileController.*;
+import static Utilities.PasswordValidator.isValidPassword;
 
 public class UserController {
     public static Map<String, User> users = new LinkedHashMap<>();
@@ -22,25 +21,14 @@ public class UserController {
         updateFiles(USERS_JSON, users);
     }
 
-    public static void isValidPassword(String password) throws InvalidPasswordException {
-        if (!PasswordValidator.checkPassword(password)) {
-            throw new InvalidPasswordException(password);
-        }
-    }
-
     public static boolean checkUserPassword(String password, User user) {
         return user.getPassword().equals(password);
-    }
-
-    public static boolean containsUsername(String username) {
-        return users.containsKey(username) || administrators.containsKey(username);
     }
 
     public static void registerUser(String username, String password) throws IOException, InvalidPasswordException {
             isValidPassword(password);
             users.put(username, new User(username, password));
             updateFiles(USERS_JSON, users);
-
     }
 
     public static void deleteUser(String username) throws IOException {

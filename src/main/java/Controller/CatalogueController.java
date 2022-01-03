@@ -40,7 +40,7 @@ public class CatalogueController {
     public static void showArticlesByDeactivationDateFrom(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> map) {
         for (Map.Entry<String, Article> article : map.entrySet()) {
             if (article.getValue().getDateOfDeactivation().after(dateAfter) && article.getValue().getDateOfDeactivation().before(dateBefore)) {
-                System.out.printf("%s | %.2f lv. | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
+                System.out.printf("%s | %.2f BGN | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                         article.getValue().getCategory(), article.getValue().getOwnerName());
             }
         }
@@ -49,7 +49,7 @@ public class CatalogueController {
     public static void showArticlesByDateFrom(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> map) {
         for (Map.Entry<String, Article> article : map.entrySet()) {
             if (article.getValue().getDate().after(dateAfter) && article.getValue().getDate().before(dateBefore)) {
-                System.out.printf("%s | %.2f lv. | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
+                System.out.printf("%s | %.2f BGN | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                         article.getValue().getCategory(), article.getValue().getActivateMessage(), article.getValue().getOwnerName());
             }
         }
@@ -108,7 +108,7 @@ public class CatalogueController {
             return;
         }
         for (Map.Entry<String, Article> article : map.entrySet()) {
-            System.out.printf("%s | %.2f lv. | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
+            System.out.printf("%s | %.2f BGN | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                     article.getValue().getCategory(), article.getValue().getActivateMessage(), article.getValue().getOwnerName());
         }
         System.out.println();
@@ -120,7 +120,7 @@ public class CatalogueController {
         }
         for (Map.Entry<String, Article> article : catalogue.entrySet()) {
             if (article.getValue().getOwnerName().equals(userName)) {
-                System.out.printf("%s | %.2f lv. | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
+                System.out.printf("%s | %.2f BGN | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                         article.getValue().getCategory(), article.getValue().getActivateMessage());
             }
         }

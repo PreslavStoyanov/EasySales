@@ -11,6 +11,7 @@ import static Constants.BasicConstants.USERS_JSON;
 import static Controller.CatalogueController.catalogue;
 import static Controller.FileController.updateFiles;
 import static Controller.UserController.*;
+import static Utilities.PasswordValidator.isValidPassword;
 
 public class User {
     private String username;
@@ -53,7 +54,7 @@ public class User {
 
     public void showFavourites() {
         for (Map.Entry<String, Article> article : this.favorites.entrySet()) {
-            System.out.printf("%s | %.2f lv. | %s %n",
+            System.out.printf("%s | %.2f BGN | %s %n",
                     article.getKey(), article.getValue().getPrice(), article.getValue().getCategory());
         }
     }

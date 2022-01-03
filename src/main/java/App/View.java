@@ -5,6 +5,7 @@ import java.util.*;
 
 import Exceptions.InvalidPasswordException;
 import Model.*;
+import Utilities.ContainsUsername;
 
 import static Controller.AdministratorController.*;
 import static Controller.UserController.*;
@@ -205,7 +206,7 @@ public class View {
     private static String ChangeAdministratorUsername(Scanner sc, String username, Administrator administrator) throws IOException {
         System.out.print("Type your new username: ");
         String newUsername = sc.next();
-        if (!containsUsername(newUsername)) {
+        if (!ContainsUsername.containsUsername(newUsername)) {
             administrator.setUsername(username);
             setAdministratorKey(newUsername, username);
             System.out.println("Your name was changed!");
@@ -329,7 +330,7 @@ public class View {
     private static String ChangeUserUsername(Scanner sc, String username, User user) throws IOException, InvalidPasswordException {
         System.out.print("Type your new username: ");
         String newUsername = sc.next();
-        if (!containsUsername(newUsername)) {
+        if (!ContainsUsername.containsUsername(newUsername)) {
             user.setUsername(username);
             setUserKey(newUsername, username);
             System.out.println("Your name was changed!");
@@ -530,7 +531,7 @@ public class View {
     private static void Register(Scanner sc) throws IOException, InvalidPasswordException {
         System.out.print("Insert username: ");
         String username = sc.next();
-        while (containsUsername(username)) {
+        while (ContainsUsername.containsUsername(username)) {
             System.out.println("Name taken!");
             System.out.print("Insert username: ");
             username = sc.next();
