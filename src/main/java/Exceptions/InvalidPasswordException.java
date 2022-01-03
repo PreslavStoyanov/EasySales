@@ -1,4 +1,4 @@
-package Model;
+package Exceptions;
 
 public class InvalidPasswordException extends Exception{
     String invalidPassword;

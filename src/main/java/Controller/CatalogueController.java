@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static Constants.BasicConstants.CATALOGUE_JSON;
+import static Constants.BasicConstants.USERS_JSON;
 import static Controller.FileController.updateFiles;
 import static Controller.UserController.users;
 
@@ -91,13 +93,13 @@ public class CatalogueController {
         catalogue.remove(oldKey);
         catalogue.put(newKey, new Article(newKey, article.getPrice(),
                 article.getCategory(), article.getOwnerName(), article.getDate(), article.isActive()));
-        updateFiles("Catalogue.json", catalogue);
-        updateFiles("Users.json", users);
+        updateFiles(CATALOGUE_JSON, catalogue);
+        updateFiles(USERS_JSON, users);
     }
 
     public static void deleteArticle(String nameOfArticle) throws IOException {
         catalogue.remove(nameOfArticle);
-        updateFiles("Catalogue.json", catalogue);
+        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public static void showArticlesFrom(Map<String, Article> map) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.sql.Date;
 
+import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Controller.CatalogueController.catalogue;
 import static Controller.FileController.updateFiles;
 
@@ -39,7 +40,7 @@ public class Article {
 
     public void setName(String name) throws IOException {
         this.name = name;
-        updateFiles("Catalogue.json", catalogue);
+        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public double getPrice() {
@@ -48,7 +49,7 @@ public class Article {
 
     public void setPrice(double price) throws IOException {
         this.price = price;
-        updateFiles("Catalogue.json", catalogue);
+        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public String getCategory() {
@@ -70,7 +71,7 @@ public class Article {
     public void deactivate() throws IOException {
         this.active = false;
         this.dateOfDeactivation = Date.valueOf(LocalDate.now());
-        updateFiles("Catalogue.json", catalogue);
+        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public String getActivateMessage() {

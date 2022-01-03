@@ -1,9 +1,13 @@
 package Model;
 
+import Exceptions.InvalidPasswordException;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static Constants.BasicConstants.CATALOGUE_JSON;
+import static Constants.BasicConstants.USERS_JSON;
 import static Controller.CatalogueController.catalogue;
 import static Controller.FileController.updateFiles;
 import static Controller.UserController.*;
@@ -15,12 +19,12 @@ public class User {
 
     public void listItem(String nameOfArticle, Article article) throws IOException {
         catalogue.put(nameOfArticle, article);
-        updateFiles("Catalogue.json", catalogue);
+        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public void buyItem(String nameOfArticle, Article article) throws IOException {
         catalogue.remove(nameOfArticle, article);
-        updateFiles("Catalogue.json", catalogue);
+        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public User(String username, String password) {
@@ -39,12 +43,12 @@ public class User {
 
     public void addToFavourites(Article article) throws IOException {
         this.favorites.put(article.getName(), article);
-        updateFiles("Users.json", users);
+        updateFiles(USERS_JSON, users);
     }
 
     public void removeFromFavourites(Article article) throws IOException {
         this.favorites.remove(article.getName());
-        updateFiles("Users.json", users);
+        updateFiles(USERS_JSON, users);
     }
 
     public void showFavourites() {
@@ -64,7 +68,7 @@ public class User {
 
     public void setUsername(String username) throws IOException {
         this.username = username;
-        updateFiles("Users.json", users);
+        updateFiles(USERS_JSON, users);
     }
 
     public String getPassword() {
@@ -74,7 +78,7 @@ public class User {
     public void setPassword(String password) throws IOException, InvalidPasswordException {
         isValidPassword(password);
         this.password = password;
-        updateFiles("Users.json", users);
+        updateFiles(USERS_JSON, users);
 
     }
 

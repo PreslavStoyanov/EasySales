@@ -1,8 +1,12 @@
 package Model;
 
+import Exceptions.InvalidPasswordException;
+
 import java.io.IOException;
 import java.util.Map;
 
+import static Constants.BasicConstants.ADMINISTRATORS_JSON;
+import static Constants.BasicConstants.CATEGORIES_JSON;
 import static Controller.AdministratorController.administrators;
 import static Controller.AdministratorController.categories;
 import static Controller.FileController.updateFiles;
@@ -29,18 +33,18 @@ public class Administrator {
 
     public void addCategory(String nameOfCategory) throws IOException {
         categories.put(nameOfCategory, nameOfCategory);
-        updateFiles("Categories.json", categories);
+        updateFiles(CATEGORIES_JSON, categories);
     }
 
     public void removeCategory(String nameOfCategory) throws IOException {
         categories.remove(nameOfCategory, nameOfCategory);
-        updateFiles("Categories.json", categories);
+        updateFiles(CATEGORIES_JSON, categories);
     }
 
     public void setCategoryName(String newName, String oldName) throws IOException {
         categories.remove(oldName);
         categories.put(newName, newName);
-        updateFiles("Categories.json", categories);
+        updateFiles(CATEGORIES_JSON, categories);
     }
 
     public String getUsername() {
@@ -49,7 +53,7 @@ public class Administrator {
 
     public void setUsername(String username) throws IOException {
         this.username = username;
-        updateFiles("Administrators.json", administrators);
+        updateFiles(ADMINISTRATORS_JSON, administrators);
     }
 
     public String getPassword() {
@@ -59,6 +63,6 @@ public class Administrator {
     public void setPassword(String password) throws InvalidPasswordException, IOException {
         isValidPassword(password);
         this.password = password;
-        updateFiles("Administrators.json", administrators);
+        updateFiles(ADMINISTRATORS_JSON, administrators);
     }
 }

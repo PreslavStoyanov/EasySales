@@ -9,16 +9,12 @@ import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static Constants.BasicConstants.*;
 import static Controller.AdministratorController.*;
 import static Controller.CatalogueController.catalogue;
 import static Controller.UserController.users;
 
-public class FileController<T> {
-    T object;
-
-    public FileController(T object) {
-        this.object = object;
-    }
+public class FileController {
 
     public static void updateFiles(String filePath, Map<String, ?> map) throws IOException {
         File file = new File(filePath);
@@ -59,7 +55,7 @@ public class FileController<T> {
 
     public static void readUsers() throws IOException {
         Type type = TypeToken.getParameterized(Map.class, String.class, User.class).getType();
-        Map<String, Object> currMap = readFiles("Users.json", type);
+        Map<String, Object> currMap = readFiles(USERS_JSON, type);
         LinkedHashMap<String, User> userMap = new LinkedHashMap<>();
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             userMap.put(obj.getKey(), (User) obj.getValue());
@@ -68,7 +64,7 @@ public class FileController<T> {
     }
     public static void readAdministrators() throws IOException {
         Type type = TypeToken.getParameterized(Map.class, String.class, Administrator.class).getType();
-        Map<String, Object> currMap = readFiles("Administrators.json", type);
+        Map<String, Object> currMap = readFiles(ADMINISTRATORS_JSON, type);
         LinkedHashMap<String, Administrator> administratorMap = new LinkedHashMap<>();
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             administratorMap.put(obj.getKey(), (Administrator) obj.getValue());
@@ -77,7 +73,7 @@ public class FileController<T> {
     }
     public static void readArticles() throws IOException {
         Type type = TypeToken.getParameterized(Map.class, String.class, Article.class).getType();
-        Map<String, Object> currMap = readFiles("Catalogue.json", type);
+        Map<String, Object> currMap = readFiles(CATALOGUE_JSON, type);
         LinkedHashMap<String, Article> articlesMap = new LinkedHashMap<>();
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             articlesMap.put(obj.getKey(), (Article) obj.getValue());
@@ -86,7 +82,7 @@ public class FileController<T> {
     }
     public static void readCategories () throws IOException {
         Type type = TypeToken.getParameterized(Map.class, String.class, String.class).getType();
-        Map<String, Object> currMap = readFiles("Categories.json", type);
+        Map<String, Object> currMap = readFiles(CATEGORIES_JSON, type);
         LinkedHashMap<String, String> categoriesMap = new LinkedHashMap<>();
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             categoriesMap.put(obj.getKey(), (String) obj.getValue());

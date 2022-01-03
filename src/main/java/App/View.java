@@ -3,6 +3,7 @@ package App;
 import java.io.*;
 import java.util.*;
 
+import Exceptions.InvalidPasswordException;
 import Model.*;
 
 import static Controller.AdministratorController.*;
