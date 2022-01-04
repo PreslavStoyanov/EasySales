@@ -23,138 +23,140 @@ public class View {
             switch (sc.nextInt()) {
                 case 1 -> Register(sc);
 
-                case 2 -> { //'Log In'
-                    System.out.print("Insert username: ");
-                    String username = sc.next();
-                    System.out.print("Insert password: ");
-                    String password = sc.next();
-                    if (users.containsKey(username) && checkUserPassword(password, users.get(username))) {
-                        System.out.printf("Welcome %s! %n", username);
-                        User user = users.get(username);
-                        LinkedHashMap<String, Article> favorites = user.getFavorites();
+                case 2 -> Login(sc);
 
-                        boolean logInMenuWhile = true;
-                        while (logInMenuWhile) {
-                            LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
-                            ShowUserLoginMenu();
-                            switch (sc.nextInt()) {
-                                case 1 -> {
-                                    showArticlesFrom(activeCatalogue);
-                                    boolean articleMenuWhile = true;
-                                    while (articleMenuWhile) {
-                                        showArticlesMenu();
-                                        switch (sc.nextInt()) {
-                                            case 1 -> FilterByDate(sc, activeCatalogue);
-
-                                            case 2 -> AddToFavorites(sc, user, favorites, activeCatalogue);
-
-                                            case 3 -> BuyArticle(sc, user, activeCatalogue);
-
-                                            case 4 -> SellArticle(sc, username, user);
-
-                                            case 0 -> articleMenuWhile = false;
-                                        }
-                                    }
-                                } //all Articles
-                                case 2 -> {
-                                    boolean accountMenuWhile = true;
-                                    while (accountMenuWhile) {
-                                        ShowAccountMenu();
-                                        LinkedHashMap<String, Article> ownArticles = getArticlesByUser(username);
-                                        switch (sc.nextInt()) {
-                                            case 1 -> {
-                                                showArticlesByUser(username, ownArticles);
-                                                boolean seeArticlesByUserMenu = true;
-                                                while (seeArticlesByUserMenu) {
-                                                    ShowOwnArticlesMenu();
-                                                    readArticles();
-                                                    activeCatalogue = getActiveArticles();
-                                                    ownArticles = getArticlesByUser(username);
-                                                    switch (sc.nextInt()) {
-                                                        case 1 -> ChangeArticlesPrice(sc, ownArticles);
-
-                                                        case 2 -> ChangeArticlesName(sc, ownArticles);
-
-                                                        case 3 -> DeactivateArticle(sc, ownArticles);
-
-                                                        case 4 -> DeleteArticle(sc, ownArticles);
-
-                                                        case 0 -> seeArticlesByUserMenu = false;
-                                                    }
-                                                }
-                                            } //see your sales
-                                            case 2 -> SeeFavorites(sc, user, favorites);
-
-                                            case 3 -> username = ChangeUserUsername(sc, username, user);
-
-                                            case 4 -> ChangeUserPassword(sc, user);
-
-                                            case 5 -> DeleteUser(sc, username);
-
-                                            case 0 -> accountMenuWhile = false;
-                                        }
-                                    }
-                                } // Account
-                                case 0 -> logInMenuWhile = false;
-                            }
-                        }
-                    } else if (administrators.containsKey(username) && checkAdministratorPassword(password, administrators.get(username))) {
-                        System.out.printf("Welcome %s! %n", username);
-                        Administrator administrator = administrators.get(username);
-
-                        boolean logInMenuWhile = true;
-                        while (logInMenuWhile) {
-                            LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
-                            LinkedHashMap<String, Article> inactiveCatalogue = getInactiveArticles();
-                            ShowAdministratorLoginMenu();
-                            switch (sc.nextInt()) {
-                                case 1 -> ShowActiveArticles(sc, activeCatalogue);
-
-                                case 2 -> ShowInactiveArticles(sc, inactiveCatalogue);
-
-                                case 3 -> {
-                                    showCategories();
-                                    boolean categoryMenuWhile = true;
-                                    while (categoryMenuWhile) {
-                                        ShowCategoriesMenu();
-                                        switch (sc.nextInt()) {
-                                            case 1 -> AddCategory(sc, administrator);
-
-                                            case 2 -> ChangeCategory(sc, administrator);
-
-                                            case 3 -> DeleteCategory(sc, administrator);
-
-                                            case 0 -> categoryMenuWhile = false;
-                                        }
-                                    }
-                                } // categories
-                                case 4 -> {
-                                    boolean accountsMenuWhile = true;
-                                    while (accountsMenuWhile) {
-                                        ShowAccountsMenu();
-                                        switch (sc.nextInt()) {
-                                            case 1 -> username = ChangeAdministratorUsername(sc, username, administrator);
-
-                                            case 2 -> ChangeAdministratorPassword(sc, administrator);
-
-                                            case 3 -> AddUserAsAdministrator(sc);
-
-                                            case 4 -> RemoveAdministrator(sc);
-
-                                            case 5 -> DeleteAdministrator(sc, username);
-
-                                            case 0 -> accountsMenuWhile = false;
-                                        }
-                                    }
-                                } // accounts
-                                case 0 -> logInMenuWhile = false;
-                            }
-                        }
-                    } else {
-                        System.out.println("Wrong username or password!");
-                    }
-                }
                 case 0 -> System.exit(0);
+            }
+        }
+    }
+
+    private static void Login(Scanner sc) throws IOException, InvalidPasswordException {
+        System.out.print("Insert username: ");
+        String username = sc.next();
+        System.out.print("Insert password: ");
+        String password = sc.next();
+        if (users.containsKey(username) && checkUserPassword(password, users.get(username))) {
+            LoginAsUser(sc, username);
+        } else if (administrators.containsKey(username) && checkAdministratorPassword(password, administrators.get(username))) {
+            LoginAsAdministrator(sc, username);
+        } else {
+            System.out.println("Wrong username or password!");
+        }
+    }
+
+    private static void LoginAsAdministrator(Scanner sc, String username) throws IOException, InvalidPasswordException {
+        System.out.printf("Welcome %s! %n", username);
+        Administrator administrator = administrators.get(username);
+
+        boolean logInMenuWhile = true;
+        while (logInMenuWhile) {
+            LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
+            LinkedHashMap<String, Article> inactiveCatalogue = getInactiveArticles();
+            ShowAdministratorLoginMenu();
+            switch (sc.nextInt()) {
+                case 1 -> ShowActiveArticles(sc, activeCatalogue);
+                case 2 -> ShowInactiveArticles(sc, inactiveCatalogue);
+                case 3 -> ShowCategories(sc, administrator);
+                case 4 -> username = ShowAccounts(sc, username, administrator);
+                case 0 -> logInMenuWhile = false;
+            }
+        }
+    }
+
+    private static String ShowAccounts(Scanner sc, String username, Administrator administrator) throws IOException, InvalidPasswordException {
+        boolean accountsMenuWhile = true;
+        while (accountsMenuWhile) {
+            ShowAccountsMenu();
+            switch (sc.nextInt()) {
+                case 1 -> username = ChangeAdministratorUsername(sc, username, administrator);
+                case 2 -> ChangeAdministratorPassword(sc, administrator);
+                case 3 -> AddUserAsAdministrator(sc);
+                case 4 -> RemoveAdministrator(sc);
+                case 5 -> DeleteAdministrator(sc, username);
+                case 0 -> accountsMenuWhile = false;
+            }
+        }
+        return username;
+    }
+
+    private static void ShowCategories(Scanner sc, Administrator administrator) throws IOException {
+        showCategories();
+        boolean categoryMenuWhile = true;
+        while (categoryMenuWhile) {
+            ShowCategoriesMenu();
+            switch (sc.nextInt()) {
+                case 1 -> AddCategory(sc, administrator);
+                case 2 -> ChangeCategory(sc, administrator);
+                case 3 -> DeleteCategory(sc, administrator);
+                case 0 -> categoryMenuWhile = false;
+            }
+        }
+    }
+
+    private static void LoginAsUser(Scanner sc, String username) throws IOException, InvalidPasswordException {
+        System.out.printf("Welcome %s! %n", username);
+        User user = users.get(username);
+        LinkedHashMap<String, Article> favorites = user.getFavorites();
+
+        boolean logInMenuWhile = true;
+        while (logInMenuWhile) {
+            LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
+            ShowUserLoginMenu();
+            switch (sc.nextInt()) {
+                case 1 -> ShowAllArticles(sc, username, user, favorites, activeCatalogue);
+                case 2 -> username = Account(sc, username, user, favorites);
+                case 0 -> logInMenuWhile = false;
+            }
+        }
+    }
+
+    private static void ShowAllArticles(Scanner sc, String username, User user, LinkedHashMap<String, Article> favorites, LinkedHashMap<String, Article> activeCatalogue) throws IOException {
+        showArticlesFrom(activeCatalogue);
+        boolean articleMenuWhile = true;
+        while (articleMenuWhile) {
+            showArticlesMenu();
+            switch (sc.nextInt()) {
+                case 1 -> FilterByDate(sc, activeCatalogue);
+                case 2 -> AddToFavorites(sc, user, favorites, activeCatalogue);
+                case 3 -> BuyArticle(sc, user, activeCatalogue);
+                case 4 -> SellArticle(sc, username, user);
+                case 0 -> articleMenuWhile = false;
+            }
+        }
+    }
+
+    private static String Account(Scanner sc, String username, User user, LinkedHashMap<String, Article> favorites) throws IOException, InvalidPasswordException {
+        boolean accountMenuWhile = true;
+        while (accountMenuWhile) {
+            ShowAccountMenu();
+            LinkedHashMap<String, Article> ownArticles = getArticlesByUser(username);
+            switch (sc.nextInt()) {
+                case 1 -> ShowYourSales(sc, username, ownArticles);
+                case 2 -> SeeFavorites(sc, user, favorites);
+                case 3 -> username = ChangeUserUsername(sc, username, user);
+                case 4 -> ChangeUserPassword(sc, user);
+                case 5 -> DeleteUser(sc, username);
+                case 0 -> accountMenuWhile = false;
+            }
+        }
+        return username;
+    }
+
+    private static void ShowYourSales(Scanner sc, String username, LinkedHashMap<String, Article> ownArticles) throws IOException {
+        LinkedHashMap<String, Article> activeCatalogue;
+        showArticlesByUser(username, ownArticles);
+        boolean seeArticlesByUserMenu = true;
+        while (seeArticlesByUserMenu) {
+            ShowOwnArticlesMenu();
+            readArticles();
+            activeCatalogue = getActiveArticles();
+            ownArticles = getArticlesByUser(username);
+            switch (sc.nextInt()) {
+                case 1 -> ChangeArticlesPrice(sc, ownArticles);
+                case 2 -> ChangeArticlesName(sc, ownArticles);
+                case 3 -> DeactivateArticle(sc, ownArticles);
+                case 4 -> DeleteArticle(sc, ownArticles);
+                case 0 -> seeArticlesByUserMenu = false;
             }
         }
     }
