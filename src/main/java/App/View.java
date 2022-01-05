@@ -110,7 +110,6 @@ public class View {
 
         boolean logInMenuWhile = true;
         while (logInMenuWhile) {
-            LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
             ShowUserLoginMenu();
             switch (sc.nextInt()) {
                 case 1 -> ShowAllArticles(sc, username, user, favorites);

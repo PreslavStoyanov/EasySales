@@ -12,8 +12,8 @@ public class Article {
     private String name;
     private double price;
     private final String category;
-    private String ownerName;
-    private Date date;
+    private final String ownerName;
+    private final Date date;
     private boolean active;
     private Date dateOfDeactivation;
 
