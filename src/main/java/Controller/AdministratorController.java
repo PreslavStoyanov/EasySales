@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Administrator;
 import Model.User;
+import Utilities.PasswordHashing;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -17,6 +18,7 @@ public class AdministratorController {
     public static Map<String, String> categories = new LinkedHashMap<>();
 
     public static boolean checkAdministratorPassword(String password, Administrator administrator) {
+        //password = PasswordHashing.getHashPassword(password);
         return administrator.getPassword().equals(password);
     }
 

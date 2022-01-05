@@ -1,5 +1,7 @@
 package Model;
 
+import Utilities.PasswordHashing;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -58,6 +60,7 @@ public class Administrator {
     }
 
     public void setPassword(String password) throws IOException {
+        password = PasswordHashing.getHashPassword(password);
         this.password = password;
         updateFiles(ADMINISTRATORS_JSON, administrators);
     }

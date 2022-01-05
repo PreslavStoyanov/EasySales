@@ -8,6 +8,7 @@ import java.util.Map;
 
 import static Constants.BasicConstants.USERS_JSON;
 import static Controller.FileController.*;
+import static Utilities.PasswordHashing.*;
 
 public class UserController {
     public static Map<String, User> users = new LinkedHashMap<>();
@@ -20,10 +21,12 @@ public class UserController {
     }
 
     public static boolean checkUserPassword(String password, User user) {
+        password = getHashPassword(password);
         return user.getPassword().equals(password);
     }
 
     public static void registerUser(String username, String password) throws IOException {
+        password = getHashPassword(password);
         users.put(username, new User(username, password));
         updateFiles(USERS_JSON, users);
     }

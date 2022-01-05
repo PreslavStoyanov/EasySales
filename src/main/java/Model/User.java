@@ -1,5 +1,7 @@
 package Model;
 
+import Utilities.PasswordHashing;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -73,6 +75,7 @@ public class User {
     }
 
     public void setPassword(String password) throws IOException {
+        password = PasswordHashing.getHashPassword(password);
         this.password = password;
         updateFiles(USERS_JSON, users);
 
