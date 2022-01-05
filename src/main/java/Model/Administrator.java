@@ -1,13 +1,9 @@
 package Model;
 
-import Utilities.PasswordHashing;
-
 import java.io.IOException;
 import java.util.Map;
 
-import static Constants.BasicConstants.ADMINISTRATORS_JSON;
 import static Constants.BasicConstants.CATEGORIES_JSON;
-import static Controller.AdministratorController.administrators;
 import static Controller.AdministratorController.categories;
 import static Controller.FileController.updateFiles;
 
@@ -50,18 +46,15 @@ public class Administrator {
         return this.username;
     }
 
-    public void setUsername(String username) throws IOException {
+    public void setUsername(String username) {
         this.username = username;
-        updateFiles(ADMINISTRATORS_JSON, administrators);
     }
 
     public String getPassword() {
         return this.password;
     }
 
-    public void setPassword(String password) throws IOException {
-        password = PasswordHashing.getHashPassword(password);
+    public void setPassword(String password) {
         this.password = password;
-        updateFiles(ADMINISTRATORS_JSON, administrators);
     }
 }

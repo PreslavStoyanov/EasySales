@@ -1,7 +1,5 @@
 package Model;
 
-import Utilities.PasswordHashing;
-
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,10 +32,9 @@ public class User {
     }
 
     public User(String username, String password, LinkedHashMap<String, Article> favorites) {
-            this.username = username;
-            this.password = password;
-            this.favorites = favorites;
-
+        this.username = username;
+        this.password = password;
+        this.favorites = favorites;
     }
 
     public void addToFavourites(Article article) throws IOException {
@@ -65,20 +62,16 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) throws IOException {
+    public void setUsername(String username) {
         this.username = username;
-        updateFiles(USERS_JSON, users);
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) throws IOException {
-        password = PasswordHashing.getHashPassword(password);
+    public void setPassword(String password) {
         this.password = password;
-        updateFiles(USERS_JSON, users);
-
     }
 
 }

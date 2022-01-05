@@ -35,4 +35,9 @@ public class PasswordValidator {
         }
         return password;
     }
+
+    public static boolean isRightPassword (String currentPassword, String expectedPassword) {
+        currentPassword = PasswordHashing.getHashPassword(currentPassword);
+        return currentPassword.equals(expectedPassword);
+    }
 }

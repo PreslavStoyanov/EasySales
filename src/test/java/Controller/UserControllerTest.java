@@ -12,6 +12,7 @@ import java.util.Map;
 import static Constants.BasicConstants.USERS_JSON;
 import static Controller.FileController.readFiles;
 import static Controller.UserController.*;
+import static Utilities.PasswordValidator.isRightPassword;
 import static org.junit.Assert.*;
 
 public class UserControllerTest {
@@ -29,12 +30,6 @@ public class UserControllerTest {
         setUpUsers();
         registerUser("Username", "Password");
         assertTrue(users.containsKey("Username"));
-    }
-
-    @Test
-    public void testCheckUserPassword() {
-        assertFalse(checkUserPassword("WrongPassword", users.get("Username")));
-        assertTrue(checkUserPassword("Password", users.get("Username")));
     }
 
     @Test

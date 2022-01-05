@@ -1,1 +1,31 @@
-{"paf":{"username":"paf","password":"353461f4067cf79635a0841417bc6423","favorites":{}},"Natalia":{"username":"Natalia","password":"a03485127c45228f65f75070c3aba035","favorites":{"Shirt":{"name":"Shirt","price":20.0,"category":"Moda","ownerName":"paf","date":"дек 24, 2021","active":true}}},"Presli":{"username":"Presli","password":"57c5d5e739492128417dbdf941f29bc9","favorites":{}},"Natalka":{"username":"Natalka","password":"9921f14bad1b58df5880958821bd2830","favorites":{}}}
+{
+  "paf": {
+    "username": "paf",
+    "password": "353461f4067cf79635a0841417bc6423",
+    "favorites": {}
+  },
+  "Natalia": {
+    "username": "Natalia",
+    "password": "a03485127c45228f65f75070c3aba035",
+    "favorites": {
+      "Shirt": {
+        "name": "Shirt",
+        "price": 20.0,
+        "category": "Moda",
+        "ownerName": "paf",
+        "date": "дек 24, 2021",
+        "active": true
+      }
+    }
+  },
+  "Presli": {
+    "username": "Presli",
+    "password": "57c5d5e739492128417dbdf941f29bc9",
+    "favorites": {}
+  },
+  "Natalka": {
+    "username": "Natalka",
+    "password": "9921f14bad1b58df5880958821bd2830",
+    "favorites": {}
+  }
+}

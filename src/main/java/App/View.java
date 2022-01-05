@@ -13,6 +13,7 @@ import static Controller.UserController.*;
 import static Controller.FileController.*;
 import static Controller.CatalogueController.*;
 import static Model.Administrator.showCategories;
+import static Utilities.PasswordValidator.*;
 
 public class View {
     public static void main(String[] args) throws IOException, InvalidPasswordException {
@@ -36,9 +37,9 @@ public class View {
         String username = sc.next();
         System.out.print("Insert password: ");
         String password = sc.next();
-        if (users.containsKey(username) && checkUserPassword(password, users.get(username))) {
+        if (users.containsKey(username) && isRightPassword(password, users.get(username).getPassword())) {
             LoginAsUser(sc, username);
-        } else if (administrators.containsKey(username) && checkAdministratorPassword(password, administrators.get(username))) {
+        } else if (administrators.containsKey(username) && isRightPassword(password, administrators.get(username).getPassword())) {
             LoginAsAdministrator(sc, username);
         } else {
             System.out.println("Wrong username or password!");
@@ -69,7 +70,7 @@ public class View {
         while (accountsMenuWhile) {
             ShowAccountsMenu();
             switch (sc.nextInt()) {
-                case 1 -> username = ChangeAdministratorUsername(sc, username, administrator);
+                case 1 -> username = ChangeAdministratorUsername(sc, username);
                 case 2 -> ChangeAdministratorPassword(sc, administrator);
                 case 3 -> AddUserAsAdministrator(sc);
                 case 4 -> RemoveAdministrator(sc);
@@ -134,7 +135,7 @@ public class View {
             switch (sc.nextInt()) {
                 case 1 -> ShowYourSales(sc, username, ownArticles);
                 case 2 -> SeeFavorites(sc, user, favorites);
-                case 3 -> username = ChangeUserUsername(sc, username, user);
+                case 3 -> username = ChangeUserUsername(sc, username);
                 case 4 -> ChangeUserPassword(sc, user);
                 case 5 -> DeleteUser(sc, username);
                 case 0 -> accountMenuWhile = false;
@@ -194,25 +195,22 @@ public class View {
     }
 
     private static void ChangeAdministratorPassword(Scanner sc, Administrator administrator) throws InvalidPasswordException, IOException {
-        String password;
         System.out.print("Type your old password: ");
         String oldPassword = sc.next();
-        if (checkAdministratorPassword(oldPassword, administrator)) {
+        if (isRightPassword(oldPassword, administrator.getPassword())) {
             System.out.print("Type your new password: ");
-            password = PasswordValidator.getValidPassword(sc);
-            administrator.setPassword(password);
+            changeAdministratorPassword(administrator, sc);
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
         }
     }
 
-    private static String ChangeAdministratorUsername(Scanner sc, String username, Administrator administrator) throws IOException {
+    private static String ChangeAdministratorUsername(Scanner sc, String username) throws IOException {
         System.out.print("Type your new username: ");
         String newUsername = sc.next();
         if (!ContainsUsername.containsUsername(newUsername)) {
-            administrator.setUsername(username);
-            setAdministratorKey(newUsername, username);
+            changeAdministratorName(username, newUsername);
             System.out.println("Your name was changed!");
             username = newUsername;
         } else {
@@ -318,26 +316,23 @@ public class View {
         System.exit(0);
     }
 
-    private static void ChangeUserPassword(Scanner sc, User user) throws IOException, InvalidPasswordException {
-        String password;
+    private static void ChangeUserPassword(Scanner sc, User user) throws InvalidPasswordException, IOException {
         System.out.print("Type your old password: ");
         String oldPassword = sc.next();
-        if (checkUserPassword(oldPassword, user)) {
+        if (isRightPassword(oldPassword, user.getPassword())) {
             System.out.print("Type your new password: ");
-            password = PasswordValidator.getValidPassword(sc);
-            user.setPassword(password);
+            changeUserPassword(user, sc);
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
         }
     }
 
-    private static String ChangeUserUsername(Scanner sc, String username, User user) throws IOException, InvalidPasswordException {
+    private static String ChangeUserUsername(Scanner sc, String username) throws IOException {
         System.out.print("Type your new username: ");
         String newUsername = sc.next();
         if (!ContainsUsername.containsUsername(newUsername)) {
-            user.setUsername(username);
-            setUserKey(newUsername, username);
+            changeUserName(username, newUsername);
             System.out.println("Your name was changed!");
             username = newUsername;
         } else {
@@ -542,7 +537,7 @@ public class View {
             username = sc.next();
         }
         System.out.print("Insert password: ");
-        String password = PasswordValidator.getValidPassword(sc);
+        String password = getValidPassword(sc);
         registerUser(username, password);
         System.out.println("Registration successful!");
     }
@@ -561,7 +556,7 @@ public class View {
             catalogue.put(obj.getKey(), (Article) obj.getValue());
         }
         currMap = readFiles(String.class, CATEGORIES_JSON);
-        for (Map.Entry<String, Object> obj : currMap.entrySet()){
+        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             categories.put(obj.getKey(), (String) obj.getValue());
         }
 
