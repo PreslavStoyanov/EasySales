@@ -5,8 +5,9 @@ import java.util.*;
 
 import Exceptions.InvalidPasswordException;
 import Model.*;
-import Utilities.ContainsUsername;
+import Utilities.*;
 
+import static Constants.BasicConstants.*;
 import static Controller.AdministratorController.*;
 import static Controller.UserController.*;
 import static Controller.FileController.*;
@@ -143,13 +144,14 @@ public class View {
     }
 
     private static void ShowYourSales(Scanner sc, String username, LinkedHashMap<String, Article> ownArticles) throws IOException {
-        LinkedHashMap<String, Article> activeCatalogue;
         showArticlesByUser(username, ownArticles);
         boolean seeArticlesByUserMenu = true;
         while (seeArticlesByUserMenu) {
             ShowOwnArticlesMenu();
-            readArticles();
-            activeCatalogue = getActiveArticles();
+            Map<String, Object> currMap = readFiles(Article.class, CATALOGUE_JSON);
+            for (Map.Entry<String, Object> obj : currMap.entrySet()) {
+                catalogue.put(obj.getKey(), (Article) obj.getValue());
+            }
             ownArticles = getArticlesByUser(username);
             switch (sc.nextInt()) {
                 case 1 -> ChangeArticlesPrice(sc, ownArticles);
@@ -197,7 +199,7 @@ public class View {
         String oldPassword = sc.next();
         if (checkAdministratorPassword(oldPassword, administrator)) {
             System.out.print("Type your new password: ");
-            password = sc.next();
+            password = PasswordValidator.getValidPassword(sc);
             administrator.setPassword(password);
             System.out.println("Your password was changed!");
         } else {
@@ -225,6 +227,7 @@ public class View {
         System.out.println("To add User as Administrator press '3'");
         System.out.println("To remove Administrator press '4'");
         System.out.println("To delete Account press '5'");
+        System.out.println("To go back press '0'");
     }
 
     private static void DeleteCategory(Scanner sc, Administrator administrator) throws IOException {
@@ -321,7 +324,7 @@ public class View {
         String oldPassword = sc.next();
         if (checkUserPassword(oldPassword, user)) {
             System.out.print("Type your new password: ");
-            password = sc.next();
+            password = PasswordValidator.getValidPassword(sc);
             user.setPassword(password);
             System.out.println("Your password was changed!");
         } else {
@@ -539,15 +542,28 @@ public class View {
             username = sc.next();
         }
         System.out.print("Insert password: ");
-        String password = sc.next();
+        String password = PasswordValidator.getValidPassword(sc);
         registerUser(username, password);
         System.out.println("Registration successful!");
     }
 
     private static void ReadFiles() throws IOException {
-        readUsers();
-        readAdministrators();
-        readArticles();
-        readCategories();
+        Map<String, Object> currMap = readFiles(User.class, USERS_JSON);
+        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
+            users.put(obj.getKey(), (User) obj.getValue());
+        }
+        currMap = readFiles(Administrator.class, ADMINISTRATORS_JSON);
+        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
+            administrators.put(obj.getKey(), (Administrator) obj.getValue());
+        }
+        currMap = readFiles(Article.class, CATALOGUE_JSON);
+        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
+            catalogue.put(obj.getKey(), (Article) obj.getValue());
+        }
+        currMap = readFiles(String.class, CATEGORIES_JSON);
+        for (Map.Entry<String, Object> obj : currMap.entrySet()){
+            categories.put(obj.getKey(), (String) obj.getValue());
+        }
+
     }
 }

@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.Administrator;
-import Exceptions.InvalidPasswordException;
 import Model.User;
 
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class AdministratorController {
         updateFiles(USERS_JSON, users);
     }
 
-    public static void removeAdministrator(Administrator admin) throws IOException, InvalidPasswordException {
+    public static void removeAdministrator(Administrator admin) throws IOException {
         users.put(admin.getUsername(), new User(admin.getUsername(), admin.getPassword(), new LinkedHashMap<>()));
         administrators.remove(admin.getUsername());
         updateFiles(ADMINISTRATORS_JSON, administrators);

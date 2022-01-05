@@ -1,7 +1,5 @@
 package Model;
 
-import Exceptions.InvalidPasswordException;
-
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,8 +32,7 @@ public class User {
         this.favorites = new LinkedHashMap<>();
     }
 
-    public User(String username, String password, LinkedHashMap<String, Article> favorites) throws InvalidPasswordException {
-            isValidPassword(password);
+    public User(String username, String password, LinkedHashMap<String, Article> favorites) {
             this.username = username;
             this.password = password;
             this.favorites = favorites;
@@ -76,8 +73,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) throws IOException, InvalidPasswordException {
-        isValidPassword(password);
+    public void setPassword(String password) throws IOException {
         this.password = password;
         updateFiles(USERS_JSON, users);
 

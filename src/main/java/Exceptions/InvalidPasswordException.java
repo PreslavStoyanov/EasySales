@@ -1,6 +1,6 @@
 package Exceptions;
 
-public class InvalidPasswordException extends Exception{
+public class InvalidPasswordException extends RuntimeException{
     String invalidPassword;
 
     public InvalidPasswordException(String invalidPassword) {
@@ -11,4 +11,5 @@ public class InvalidPasswordException extends Exception{
     public String getMessage() {
         return "Invalid password!";
     }
+
 }

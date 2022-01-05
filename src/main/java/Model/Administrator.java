@@ -1,7 +1,5 @@
 package Model;
 
-import Exceptions.InvalidPasswordException;
-
 import java.io.IOException;
 import java.util.Map;
 
@@ -10,7 +8,6 @@ import static Constants.BasicConstants.CATEGORIES_JSON;
 import static Controller.AdministratorController.administrators;
 import static Controller.AdministratorController.categories;
 import static Controller.FileController.updateFiles;
-import static Utilities.PasswordValidator.isValidPassword;
 
 public class Administrator {
     private String username;
@@ -60,8 +57,7 @@ public class Administrator {
         return this.password;
     }
 
-    public void setPassword(String password) throws InvalidPasswordException, IOException {
-        isValidPassword(password);
+    public void setPassword(String password) throws IOException {
         this.password = password;
         updateFiles(ADMINISTRATORS_JSON, administrators);
     }

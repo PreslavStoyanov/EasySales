@@ -34,17 +34,18 @@ public class FileController {
         }
     }
 
-    public static Map<String, Object> readFiles(String filePath, Type type) throws IOException {
+    public static Map<String, Object> readFiles(Class<?> classType, String filePath) throws IOException {
         Map<String, Object> mapToReturn = new LinkedHashMap<>();
         File file = new File(filePath);
         Gson gson;
         FileReader fr = null;
+        Type type = TypeToken.getParameterized(Map.class, String.class, classType).getType();
         try {
             gson = new Gson();
             fr = new FileReader(file);
             mapToReturn = gson.fromJson(fr, type);
         } catch (FileNotFoundException e) {
-            System.err.println("File Not Found");
+            System.err.println("File Not Found: " + filePath);
         } finally {
             if (fr != null) {
                 fr.close();
@@ -53,40 +54,5 @@ public class FileController {
         return mapToReturn;
     }
 
-    public static void readUsers() throws IOException {
-        Type type = TypeToken.getParameterized(Map.class, String.class, User.class).getType();
-        Map<String, Object> currMap = readFiles(USERS_JSON, type);
-        LinkedHashMap<String, User> userMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
-            userMap.put(obj.getKey(), (User) obj.getValue());
-        }
-        users = userMap;
-    }
-    public static void readAdministrators() throws IOException {
-        Type type = TypeToken.getParameterized(Map.class, String.class, Administrator.class).getType();
-        Map<String, Object> currMap = readFiles(ADMINISTRATORS_JSON, type);
-        LinkedHashMap<String, Administrator> administratorMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
-            administratorMap.put(obj.getKey(), (Administrator) obj.getValue());
-        }
-        administrators = administratorMap;
-    }
-    public static void readArticles() throws IOException {
-        Type type = TypeToken.getParameterized(Map.class, String.class, Article.class).getType();
-        Map<String, Object> currMap = readFiles(CATALOGUE_JSON, type);
-        LinkedHashMap<String, Article> articlesMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
-            articlesMap.put(obj.getKey(), (Article) obj.getValue());
-        }
-        catalogue = articlesMap;
-    }
-    public static void readCategories () throws IOException {
-        Type type = TypeToken.getParameterized(Map.class, String.class, String.class).getType();
-        Map<String, Object> currMap = readFiles(CATEGORIES_JSON, type);
-        LinkedHashMap<String, String> categoriesMap = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
-            categoriesMap.put(obj.getKey(), (String) obj.getValue());
-        }
-        categories = categoriesMap;
-    }
+
 }

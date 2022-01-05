@@ -12,8 +12,8 @@
         "name": "Shirt",
         "price": 20.0,
         "category": "Moda",
-        "date": "дек 24, 2021",
         "ownerName": "paf",
+        "date": "дек 24, 2021",
         "active": true
       }
     }
