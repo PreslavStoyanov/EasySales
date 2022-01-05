@@ -9,7 +9,6 @@ import static Constants.BasicConstants.USERS_JSON;
 import static Controller.CatalogueController.catalogue;
 import static Controller.FileController.updateFiles;
 import static Controller.UserController.*;
-import static Utilities.PasswordValidator.isValidPassword;
 
 public class User {
     private String username;

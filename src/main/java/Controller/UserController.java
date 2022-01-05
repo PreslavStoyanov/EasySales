@@ -12,7 +12,7 @@ import static Controller.FileController.*;
 public class UserController {
     public static Map<String, User> users = new LinkedHashMap<>();
 
-    public static void setUserKey (String newKey, String oldKey) throws IOException {
+    public static void setUserKey(String newKey, String oldKey) throws IOException {
         User user = users.get(oldKey);
         users.remove(oldKey);
         users.put(newKey, new User(newKey, user.getPassword(), user.getFavorites()));
@@ -24,8 +24,8 @@ public class UserController {
     }
 
     public static void registerUser(String username, String password) throws IOException {
-            users.put(username, new User(username, password));
-            updateFiles(USERS_JSON, users);
+        users.put(username, new User(username, password));
+        updateFiles(USERS_JSON, users);
     }
 
     public static void deleteUser(String username) throws IOException {

@@ -7,36 +7,36 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static Constants.BasicConstants.USERS_JSON;
 import static Controller.FileController.*;
-import static Controller.UserController.users;
 import static org.junit.Assert.*;
 
 public class FileControllerTest {
 
+    public static final String TEST_JSON = "C:\\Users\\paf_s\\IdeaProjects\\EasySales\\src\\test\\Test.json";
+
     @Test
     public void testReadFiles() throws IOException {
-        Map<String, Object> currMap = readFiles(User.class, USERS_JSON);
-        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
-            users.put(obj.getKey(), (User) obj.getValue());
-        }
-        assertFalse(users.isEmpty());
+        Map<String, User> map = setUp();
+        assertFalse(map.isEmpty());
     }
 
     @Test
     public void testUpdateFails () throws IOException {
-        Map<String, Object> currMap = readFiles(User.class, USERS_JSON);
-        for (Map.Entry<String, Object> obj : currMap.entrySet()) {
-            users.put(obj.getKey(), (User) obj.getValue());
-        }
-        Map<String, User> map = new LinkedHashMap<>();
+        Map<String, User> map = setUp();
+        Map<String, User> map2 = setUp();
         User user = new User("User", "Password");
         map.put(user.getUsername(), user);
-        currMap = readFiles(User.class, USERS_JSON);
+        updateFiles(TEST_JSON, map);
+        map = setUp();
+        assertNotEquals(map2, map);
+    }
+
+    private Map<String, User> setUp() throws IOException {
+        Map<String, User> map = new LinkedHashMap<>();
+        Map<String, Object> currMap = readFiles(User.class, TEST_JSON);
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
-            users.put(obj.getKey(), (User) obj.getValue());
+            map.put(obj.getKey(), (User) obj.getValue());
         }
-        updateFiles("C:\\Users\\paf_s\\IdeaProjects\\EasySales\\src\\test\\Test.json", map);
-        assertNotEquals(users, map);
+        return map;
     }
 }
