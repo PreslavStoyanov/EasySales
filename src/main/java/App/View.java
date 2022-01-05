@@ -1,19 +1,27 @@
 package App;
 
-import java.io.*;
-import java.util.*;
-
 import Exceptions.InvalidPasswordException;
-import Model.*;
-import Utilities.*;
+import Model.Administrator;
+import Model.Article;
+import Model.User;
+import Utilities.ContainsUsername;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 import static Constants.BasicConstants.*;
 import static Controller.AdministratorController.*;
-import static Controller.UserController.*;
-import static Controller.FileController.*;
 import static Controller.CatalogueController.*;
+import static Controller.FileController.readFiles;
+import static Controller.UserController.*;
 import static Model.Administrator.showCategories;
-import static Utilities.PasswordValidator.*;
+import static Utilities.DateFormatting.getDate;
+import static Utilities.DateFormatting.isValidDateFormat;
+import static Utilities.PasswordValidator.getValidPassword;
+import static Utilities.PasswordValidator.isRightPassword;
 
 public class View {
     public static void main(String[] args) throws IOException, InvalidPasswordException {
@@ -105,14 +113,15 @@ public class View {
             LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
             ShowUserLoginMenu();
             switch (sc.nextInt()) {
-                case 1 -> ShowAllArticles(sc, username, user, favorites, activeCatalogue);
+                case 1 -> ShowAllArticles(sc, username, user, favorites);
                 case 2 -> username = Account(sc, username, user, favorites);
                 case 0 -> logInMenuWhile = false;
             }
         }
     }
 
-    private static void ShowAllArticles(Scanner sc, String username, User user, LinkedHashMap<String, Article> favorites, LinkedHashMap<String, Article> activeCatalogue) throws IOException {
+    private static void ShowAllArticles(Scanner sc, String username, User user, LinkedHashMap<String, Article> favorites) throws IOException {
+        LinkedHashMap<String, Article> activeCatalogue = getActiveArticles();
         showArticlesFrom(activeCatalogue);
         boolean articleMenuWhile = true;
         while (articleMenuWhile) {
@@ -173,10 +182,11 @@ public class View {
     }
 
     private static void RemoveAdministrator(Scanner sc) throws IOException, InvalidPasswordException {
-        System.out.println("Name of administrator to remove: ");
+        System.out.print("Name of administrator to remove: ");
         String nameOfAdministrator = sc.next();
         if (!administrators.containsKey(nameOfAdministrator)) {
             System.out.println("No such administrator!");
+            System.out.print("Name of administrator to remove: ");
             nameOfAdministrator = sc.next();
         }
         removeAdministrator(administrators.get(nameOfAdministrator));
@@ -184,10 +194,11 @@ public class View {
     }
 
     private static void AddUserAsAdministrator(Scanner sc) throws IOException {
-        System.out.println("Name of user to add: ");
+        System.out.print("Name of user to add: ");
         String nameOfUser = sc.next();
         if (!users.containsKey(nameOfUser)) {
             System.out.println("No such user!");
+            System.out.print("Name of user to add: ");
             nameOfUser = sc.next();
         }
         addAdministrator(users.get(nameOfUser));

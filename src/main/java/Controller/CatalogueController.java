@@ -4,13 +4,9 @@ import Model.Article;
 import Model.User;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Constants.BasicConstants.USERS_JSON;
@@ -19,23 +15,6 @@ import static Controller.UserController.users;
 
 public class CatalogueController {
     public static LinkedHashMap<String, Article> catalogue = new LinkedHashMap<>();
-
-    public static boolean isValidDateFormat (String date) {
-        Pattern pattern = Pattern.compile("[0-9]{2}:[0-9]{2}:[0-9]{4}");
-        Matcher matcher = pattern.matcher(date);
-        return matcher.matches();
-
-    }
-
-    public static Date getDate(String stringDate) {
-        Date date = null;
-        try {
-            date = new SimpleDateFormat("dd:MM:yyyy").parse(stringDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
 
     public static void showArticlesByDeactivationDateFrom(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> map) {
         for (Map.Entry<String, Article> article : map.entrySet()) {

@@ -1,8 +1,8 @@
 package Model;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.sql.Date;
+import java.time.LocalDate;
 
 import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Controller.CatalogueController.catalogue;
@@ -18,7 +18,7 @@ public class Article {
     private Date dateOfDeactivation;
 
     public Article(String name, double price, String category, String ownerName) {
-        this(name,price,category,ownerName,Date.valueOf(LocalDate.now()),true);
+        this(name, price, category, ownerName, Date.valueOf(LocalDate.now()), true);
     }
 
     public Article(String name, double price, String category, String ownerName, Date date, boolean status) {

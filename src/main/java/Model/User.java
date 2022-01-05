@@ -8,7 +8,7 @@ import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Constants.BasicConstants.USERS_JSON;
 import static Controller.CatalogueController.catalogue;
 import static Controller.FileController.updateFiles;
-import static Controller.UserController.*;
+import static Controller.UserController.users;
 
 public class User {
     private String username;
@@ -26,9 +26,7 @@ public class User {
     }
 
     public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.favorites = new LinkedHashMap<>();
+        this(username, password, new LinkedHashMap<>());
     }
 
     public User(String username, String password, LinkedHashMap<String, Article> favorites) {

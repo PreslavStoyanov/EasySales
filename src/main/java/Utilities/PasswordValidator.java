@@ -21,6 +21,7 @@ public class PasswordValidator {
     }
 
     public static String getValidPassword(Scanner sc) {
+        System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol");
         String password = sc.next();
         boolean whileInvalid = true;
         while (whileInvalid) {
@@ -29,6 +30,7 @@ public class PasswordValidator {
                 whileInvalid = false;
             } catch (InvalidPasswordException e) {
                 System.out.println(e.getMessage());
+                System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol");
                 System.out.print("Try again: ");
                 password = sc.next();
             }
@@ -36,7 +38,7 @@ public class PasswordValidator {
         return password;
     }
 
-    public static boolean isRightPassword (String currentPassword, String expectedPassword) {
+    public static boolean isRightPassword(String currentPassword, String expectedPassword) {
         currentPassword = PasswordHashing.getHashPassword(currentPassword);
         return currentPassword.equals(expectedPassword);
     }

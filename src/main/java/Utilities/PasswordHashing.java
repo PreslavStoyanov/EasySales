@@ -18,8 +18,7 @@ public class PasswordHashing {
                 sbObj.append(Integer.toString((value & 0xff) + 0x100, 16).substring(1));
             }
             generatedPassword = sbObj.toString();
-        }
-        catch (NoSuchAlgorithmException obj) {
+        } catch (NoSuchAlgorithmException obj) {
             obj.printStackTrace();
         }
         return generatedPassword;
