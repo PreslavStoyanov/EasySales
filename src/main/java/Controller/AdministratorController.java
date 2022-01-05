@@ -18,7 +18,7 @@ public class AdministratorController {
     public static Map<String, String> categories = new LinkedHashMap<>();
 
     public static boolean checkAdministratorPassword(String password, Administrator administrator) {
-        //password = PasswordHashing.getHashPassword(password);
+        password = PasswordHashing.getHashPassword(password);
         return administrator.getPassword().equals(password);
     }
 
