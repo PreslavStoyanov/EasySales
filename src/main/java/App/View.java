@@ -4,7 +4,6 @@ import Exceptions.InvalidPasswordException;
 import Model.Administrator;
 import Model.Article;
 import Model.User;
-import Utilities.PasswordValidator;
 
 import java.io.IOException;
 import java.util.Date;
@@ -15,11 +14,12 @@ import java.util.Scanner;
 import static Constants.BasicConstants.*;
 import static Controller.AdministratorController.*;
 import static Controller.CatalogueController.*;
-import static Controller.FileController.readFiles;
+import static Utilities.FileHandler.readFiles;
 import static Controller.UserController.*;
 import static Model.Administrator.showCategories;
 import static Utilities.DateFormatting.*;
-import static Utilities.PasswordValidator.isRightPassword;
+import static Utilities.PasswordHashing.getHashPassword;
+import static Utilities.PasswordValidator.*;
 
 public class View {
     public static void main(String[] args) throws IOException, InvalidPasswordException {
@@ -126,8 +126,8 @@ public class View {
             switch (sc.nextInt()) {
                 case 1 -> FilterByDate(sc, activeCatalogue);
                 case 2 -> AddToFavorites(sc, user, favorites, activeCatalogue);
-                case 3 -> BuyArticle(sc, user, activeCatalogue);
-                case 4 -> SellArticle(sc, username, user);
+                case 3 -> BuyArticle(sc, activeCatalogue);
+                case 4 -> SellArticle(sc, username);
                 case 0 -> articleMenuWhile = false;
             }
         }
@@ -209,7 +209,7 @@ public class View {
             System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
             System.out.print("Type your new password: ");
             String newPassword = getValidPassword(sc);
-            changeAdministratorPassword(administrator, newPassword);
+            changeAdministratorPassword(administrator, getHashPassword(newPassword));
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
@@ -333,7 +333,7 @@ public class View {
             System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
             System.out.print("Type your new password: ");
             String newPassword = getValidPassword(sc);
-            changeUserPassword(user, newPassword);
+            changeUserPassword(user, getHashPassword(newPassword));
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
@@ -446,7 +446,7 @@ public class View {
         System.out.println("To go back press '0'");
     }
 
-    private static void SellArticle(Scanner sc, String username, User user) throws IOException {
+    private static void SellArticle(Scanner sc, String username) throws IOException {
         System.out.print("Name of the article to sell: ");
         String nameOfArticle = sc.next();
         if (!catalogue.containsKey(nameOfArticle)) {
@@ -461,19 +461,19 @@ public class View {
                 System.out.print("Category: ");
                 category = sc.next();
             }
-            user.listItem(nameOfArticle, new Article(nameOfArticle, price, category, username));
+            addArticle(nameOfArticle, new Article(nameOfArticle, price, category, username));
             System.out.println("Your article has been released for sell successfully!");
         } else {
             System.out.println("This name is taken");
         }
     }
 
-    private static void BuyArticle(Scanner sc, User user, LinkedHashMap<String, Article> activeCatalogue) throws IOException {
+    private static void BuyArticle(Scanner sc, LinkedHashMap<String, Article> activeCatalogue) throws IOException {
         showArticlesFrom(activeCatalogue);
         System.out.print("Name of article: ");
         String nameOfArticle = sc.next();
         if (containsArticle(nameOfArticle, activeCatalogue)) {
-            user.buyItem(nameOfArticle, activeCatalogue.get(nameOfArticle));
+            deleteArticle(nameOfArticle);
             System.out.println("Purchase successful!");
         } else {
             System.out.println("No such article!");
@@ -551,7 +551,7 @@ public class View {
         System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
         System.out.print("Insert password: ");
         String password = getValidPassword(sc);
-        registerUser(username, password);
+        registerUser(username, getHashPassword(password));
         System.out.println("Registration successful!");
     }
 
@@ -560,8 +560,9 @@ public class View {
         boolean whileInvalid = true;
         while (whileInvalid) {
             try {
-                PasswordValidator.isValidPassword(password);
-                whileInvalid = false;
+                if (isValidPassword(password)){
+                    whileInvalid = false;
+                }
             } catch (InvalidPasswordException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");

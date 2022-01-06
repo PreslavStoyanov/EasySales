@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Constants.BasicConstants.USERS_JSON;
-import static Controller.FileController.updateFiles;
+import static Utilities.FileHandler.updateFiles;
 import static Controller.UserController.users;
 
 public class CatalogueController {
@@ -78,6 +78,11 @@ public class CatalogueController {
 
     public static void deleteArticle(String nameOfArticle) throws IOException {
         catalogue.remove(nameOfArticle);
+        updateFiles(CATALOGUE_JSON, catalogue);
+    }
+
+    public static void addArticle(String nameOfArticle, Article article) throws IOException {
+        catalogue.put(nameOfArticle, article);
         updateFiles(CATALOGUE_JSON, catalogue);
     }
 

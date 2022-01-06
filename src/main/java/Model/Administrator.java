@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static Constants.BasicConstants.CATEGORIES_JSON;
 import static Controller.AdministratorController.categories;
-import static Controller.FileController.updateFiles;
+import static Utilities.FileHandler.updateFiles;
 
 public class Administrator {
     private String username;

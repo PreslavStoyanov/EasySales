@@ -4,26 +4,14 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Constants.BasicConstants.USERS_JSON;
-import static Controller.CatalogueController.catalogue;
-import static Controller.FileController.updateFiles;
+import static Utilities.FileHandler.updateFiles;
 import static Controller.UserController.users;
 
 public class User {
     private String username;
     private String password;
     private LinkedHashMap<String, Article> favorites;
-
-    public void listItem(String nameOfArticle, Article article) throws IOException {
-        catalogue.put(nameOfArticle, article);
-        updateFiles(CATALOGUE_JSON, catalogue);
-    }
-
-    public void buyItem(String nameOfArticle, Article article) throws IOException {
-        catalogue.remove(nameOfArticle, article);
-        updateFiles(CATALOGUE_JSON, catalogue);
-    }
 
     public User(String username, String password) {
         this(username, password, new LinkedHashMap<>());

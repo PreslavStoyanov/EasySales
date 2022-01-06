@@ -7,9 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static Constants.BasicConstants.USERS_JSON;
-import static Controller.FileController.*;
-import static Utilities.PasswordHashing.*;
-import static Utilities.PasswordValidator.isValidPassword;
+import static Utilities.FileHandler.*;
 
 public class UserController {
     public static Map<String, User> users = new LinkedHashMap<>();
@@ -19,11 +17,8 @@ public class UserController {
     }
 
     public static void changeUserPassword(User user, String newPassword) throws IOException {
-        if (isValidPassword(newPassword)) {
-            newPassword = getHashPassword(newPassword);
-            users.get(user.getUsername()).setPassword(newPassword);
-            updateFiles(USERS_JSON, users);
-        }
+        users.get(user.getUsername()).setPassword(newPassword);
+        updateFiles(USERS_JSON, users);
     }
 
     public static void changeUserName(String oldName, String newName) throws IOException {
@@ -39,7 +34,6 @@ public class UserController {
     }
 
     public static void registerUser(String username, String password) throws IOException {
-        password = getHashPassword(password);
         users.put(username, new User(username, password));
         updateFiles(USERS_JSON, users);
     }

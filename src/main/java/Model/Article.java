@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Controller.CatalogueController.catalogue;
-import static Controller.FileController.updateFiles;
+import static Utilities.FileHandler.updateFiles;
 
 public class Article {
     private String name;

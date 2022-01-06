@@ -1,4 +1,4 @@
-package Controller;
+package Utilities;
 
 import Model.User;
 import org.junit.Test;
@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static Controller.FileController.*;
+import static Utilities.FileHandler.*;
 import static org.junit.Assert.*;
 
-public class FileControllerTest {
+public class FileHandlerTest {
 
     public static final String TEST_JSON = "C:\\Users\\paf_s\\IdeaProjects\\EasySales\\src\\test\\Test.json";
 

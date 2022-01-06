@@ -1,4 +1,4 @@
-package Controller;
+package Utilities;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FileController {
+public class FileHandler {
 
     public static void updateFiles(String filePath, Map<String, ?> map) throws IOException {
         File file = new File(filePath);
