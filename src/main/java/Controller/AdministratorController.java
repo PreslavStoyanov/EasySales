@@ -14,7 +14,7 @@ import static Controller.UserController.users;
 
 public class AdministratorController {
     public static Map<String, Administrator> administrators = new LinkedHashMap<>();
-    public static Map<String, String> categories = new LinkedHashMap<>();
+
 
     public static boolean containsAdministrator(String username) {
         return administrators.containsKey(username);

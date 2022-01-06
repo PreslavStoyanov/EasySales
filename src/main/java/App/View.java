@@ -1,9 +1,8 @@
 package App;
 
 import Exceptions.InvalidPasswordException;
-import Model.Administrator;
-import Model.Article;
-import Model.User;
+import Model.*;
+import Utilities.*;
 
 import java.io.IOException;
 import java.util.Date;
@@ -12,14 +11,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static Constants.BasicConstants.*;
+import static Controller.UserController.*;
 import static Controller.AdministratorController.*;
 import static Controller.CatalogueController.*;
-import static Utilities.FileHandler.readFiles;
-import static Controller.UserController.*;
-import static Model.Administrator.showCategories;
-import static Utilities.DateFormatting.*;
-import static Utilities.PasswordHashing.getHashPassword;
-import static Utilities.PasswordValidator.*;
+import static Controller.CategoriesController.*;
 
 public class View {
     public static void main(String[] args) throws IOException, InvalidPasswordException {
@@ -43,9 +38,9 @@ public class View {
         String username = sc.next();
         System.out.print("Insert password: ");
         String password = sc.next();
-        if (users.containsKey(username) && isRightPassword(password, users.get(username).getPassword())) {
+        if (users.containsKey(username) && PasswordValidator.isRightPassword(password, users.get(username).getPassword())) {
             LoginAsUser(sc, username);
-        } else if (administrators.containsKey(username) && isRightPassword(password, administrators.get(username).getPassword())) {
+        } else if (administrators.containsKey(username) && PasswordValidator.isRightPassword(password, administrators.get(username).getPassword())) {
             LoginAsAdministrator(sc, username);
         } else {
             System.out.println("Wrong username or password!");
@@ -64,7 +59,7 @@ public class View {
             switch (sc.nextInt()) {
                 case 1 -> ShowActiveArticles(sc, activeCatalogue);
                 case 2 -> ShowInactiveArticles(sc, inactiveCatalogue);
-                case 3 -> ShowCategories(sc, administrator);
+                case 3 -> ShowCategories(sc);
                 case 4 -> username = ShowAccounts(sc, username, administrator);
                 case 0 -> logInMenuWhile = false;
             }
@@ -87,15 +82,15 @@ public class View {
         return username;
     }
 
-    private static void ShowCategories(Scanner sc, Administrator administrator) throws IOException {
+    private static void ShowCategories(Scanner sc) throws IOException {
         showCategories();
         boolean categoryMenuWhile = true;
         while (categoryMenuWhile) {
             ShowCategoriesMenu();
             switch (sc.nextInt()) {
-                case 1 -> AddCategory(sc, administrator);
-                case 2 -> ChangeCategory(sc, administrator);
-                case 3 -> DeleteCategory(sc, administrator);
+                case 1 -> AddCategory(sc);
+                case 2 -> ChangeCategory(sc);
+                case 3 -> DeleteCategory(sc);
                 case 0 -> categoryMenuWhile = false;
             }
         }
@@ -155,7 +150,7 @@ public class View {
         boolean seeArticlesByUserMenu = true;
         while (seeArticlesByUserMenu) {
             ShowOwnArticlesMenu();
-            Map<String, Object> currMap = readFiles(Article.class, CATALOGUE_JSON);
+            Map<String, Object> currMap = FileHandler.readFiles(Article.class, CATALOGUE_JSON);
             for (Map.Entry<String, Object> obj : currMap.entrySet()) {
                 catalogue.put(obj.getKey(), (Article) obj.getValue());
             }
@@ -205,11 +200,11 @@ public class View {
     private static void ChangeAdministratorPassword(Scanner sc, Administrator administrator) throws InvalidPasswordException, IOException {
         System.out.print("Type your old password: ");
         String oldPassword = sc.next();
-        if (isRightPassword(oldPassword, administrator.getPassword())) {
+        if (PasswordValidator.isRightPassword(oldPassword, administrator.getPassword())) {
             System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
             System.out.print("Type your new password: ");
             String newPassword = getValidPassword(sc);
-            changeAdministratorPassword(administrator, getHashPassword(newPassword));
+            changeAdministratorPassword(administrator, PasswordHashing.getHashPassword(newPassword));
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
@@ -238,25 +233,25 @@ public class View {
         System.out.println("To go back press '0'");
     }
 
-    private static void DeleteCategory(Scanner sc, Administrator administrator) throws IOException {
+    private static void DeleteCategory(Scanner sc) throws IOException {
         System.out.print("Name of category: ");
         String nameOfCategory = sc.next();
-        if (administrator.containsCategory(nameOfCategory)) {
-            administrator.removeCategory(nameOfCategory);
+        if (containsCategory(nameOfCategory)) {
+            removeCategory(nameOfCategory);
             System.out.println("Category deleted!");
         } else {
             System.out.println("No such category");
         }
     }
 
-    private static void ChangeCategory(Scanner sc, Administrator administrator) throws IOException {
+    private static void ChangeCategory(Scanner sc) throws IOException {
         System.out.print("Name of category: ");
         String nameOfCategory = sc.next();
-        if (administrator.containsCategory(nameOfCategory)) {
+        if (containsCategory(nameOfCategory)) {
             System.out.print("New name of category: ");
             String newNameOfCategory = sc.next();
-            if (!administrator.containsCategory(newNameOfCategory)) {
-                administrator.setCategoryName(nameOfCategory, newNameOfCategory);
+            if (!containsCategory(newNameOfCategory)) {
+                setCategoryName(nameOfCategory, newNameOfCategory);
                 System.out.println("Category changed!");
             } else {
                 System.out.println("This name is taken");
@@ -266,11 +261,11 @@ public class View {
         }
     }
 
-    private static void AddCategory(Scanner sc, Administrator administrator) throws IOException {
+    private static void AddCategory(Scanner sc) throws IOException {
         System.out.print("Name of category: ");
         String nameOfCategory = sc.next();
-        if (!administrator.containsCategory(nameOfCategory)) {
-            administrator.addCategory(nameOfCategory);
+        if (!containsCategory(nameOfCategory)) {
+            addCategory(nameOfCategory);
             System.out.println("Category added!");
         } else {
             System.out.println("There is such category already");
@@ -329,11 +324,11 @@ public class View {
     private static void ChangeUserPassword(Scanner sc, User user) throws InvalidPasswordException, IOException {
         System.out.print("Type your old password: ");
         String oldPassword = sc.next();
-        if (isRightPassword(oldPassword, user.getPassword())) {
+        if (PasswordValidator.isRightPassword(oldPassword, user.getPassword())) {
             System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
             System.out.print("Type your new password: ");
             String newPassword = getValidPassword(sc);
-            changeUserPassword(user, getHashPassword(newPassword));
+            changeUserPassword(user, PasswordHashing.getHashPassword(newPassword));
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
@@ -354,20 +349,21 @@ public class View {
     }
 
     private static void SeeFavorites(Scanner sc, User user, LinkedHashMap<String, Article> favorites) throws IOException {
+        if (favorites.isEmpty()) {
+            System.out.println("Your favourite list is empty!");
+            System.out.println();
+            return;
+        }
         System.out.println("To remove article from favourite press '1'");
         System.out.println("To go back press '0'");
         int option = sc.nextInt();
         while (option != 1) {
             user.showFavourites();
 
-            if (favorites.isEmpty()) {
-                System.out.println("Your favourite list is empty!");
-                break;
-            }
             System.out.print("Name of article: ");
-            String nameOfArticle = sc.next();
-            if (containsArticle(nameOfArticle, favorites)) {
-                user.removeFromFavourites(favorites.get(nameOfArticle));
+            String articleName = sc.next();
+            if (containsArticle(articleName, favorites)) {
+                user.removeFromFavourites(favorites.get(articleName));
                 System.out.println("Item removed!");
             } else {
                 System.out.println("No such article!");
@@ -380,9 +376,9 @@ public class View {
 
     private static void DeleteArticle(Scanner sc, LinkedHashMap<String, Article> ownArticles) throws IOException {
         System.out.print("Name of article: ");
-        String nameOfArticle = sc.next();
-        if (containsArticle(nameOfArticle, ownArticles)) {
-            deleteArticle(nameOfArticle);
+        String articleName = sc.next();
+        if (containsArticle(articleName, ownArticles)) {
+            deleteArticle(articleName);
             System.out.println("Article deleted!");
         } else {
             System.out.println("No such article!");
@@ -391,9 +387,9 @@ public class View {
 
     private static void DeactivateArticle(Scanner sc, LinkedHashMap<String, Article> ownArticles) throws IOException {
         System.out.print("Name of article: ");
-        String nameOfArticle = sc.next();
-        if (containsArticle(nameOfArticle, ownArticles)) {
-            catalogue.get(nameOfArticle).deactivate();
+        String articleName = sc.next();
+        if (containsArticle(articleName, ownArticles)) {
+            catalogue.get(articleName).deactivate();
             System.out.println("Article deactivated!");
         } else {
             System.out.println("No such article!");
@@ -402,13 +398,13 @@ public class View {
 
     private static void ChangeArticlesName(Scanner sc, LinkedHashMap<String, Article> ownArticles) throws IOException {
         System.out.print("Name of article: ");
-        String nameOfArticle = sc.next();
-        if (containsArticle(nameOfArticle, ownArticles)) {
+        String articleName = sc.next();
+        if (containsArticle(articleName, ownArticles)) {
             System.out.print("New name: ");
             String newName = sc.next();
-            if (!catalogue.containsKey(nameOfArticle)) {
-                catalogue.get(nameOfArticle).setName(newName);
-                setArticleKey(newName, nameOfArticle);
+            if (!catalogue.containsKey(articleName)) {
+                catalogue.get(articleName).setName(newName);
+                setArticleKey(newName, articleName);
                 System.out.println("Name changed!");
             } else {
                 System.out.println("This name is taken");
@@ -418,11 +414,11 @@ public class View {
 
     private static void ChangeArticlesPrice(Scanner sc, LinkedHashMap<String, Article> ownArticles) throws IOException {
         System.out.print("Name of article: ");
-        String nameOfArticle = sc.next();
-        if (containsArticle(nameOfArticle, ownArticles)) {
+        String articleName = sc.next();
+        if (containsArticle(articleName, ownArticles)) {
             System.out.print("New price: ");
             double newPrice = sc.nextDouble();
-            catalogue.get(nameOfArticle).setPrice(newPrice);
+            catalogue.get(articleName).setPrice(newPrice);
             System.out.println("Price changed!");
         } else {
             System.out.println("No such article!");
@@ -448,8 +444,8 @@ public class View {
 
     private static void SellArticle(Scanner sc, String username) throws IOException {
         System.out.print("Name of the article to sell: ");
-        String nameOfArticle = sc.next();
-        if (!catalogue.containsKey(nameOfArticle)) {
+        String articleName = sc.next();
+        if (!catalogue.containsKey(articleName)) {
             System.out.print("Price: ");
             double price = sc.nextDouble();
             showCategories();
@@ -461,7 +457,7 @@ public class View {
                 System.out.print("Category: ");
                 category = sc.next();
             }
-            addArticle(nameOfArticle, new Article(nameOfArticle, price, category, username));
+            addArticle(articleName, new Article(articleName, price, category, username));
             System.out.println("Your article has been released for sell successfully!");
         } else {
             System.out.println("This name is taken");
@@ -471,9 +467,9 @@ public class View {
     private static void BuyArticle(Scanner sc, LinkedHashMap<String, Article> activeCatalogue) throws IOException {
         showArticlesFrom(activeCatalogue);
         System.out.print("Name of article: ");
-        String nameOfArticle = sc.next();
-        if (containsArticle(nameOfArticle, activeCatalogue)) {
-            deleteArticle(nameOfArticle);
+        String articleName = sc.next();
+        if (containsArticle(articleName, activeCatalogue)) {
+            deleteArticle(articleName);
             System.out.println("Purchase successful!");
         } else {
             System.out.println("No such article!");
@@ -483,9 +479,9 @@ public class View {
     private static void AddToFavorites(Scanner sc, User user, LinkedHashMap<String, Article> favorites, LinkedHashMap<String, Article> activeCatalogue) throws IOException {
         showArticlesFrom(activeCatalogue);
         System.out.print("Name of article: ");
-        String nameOfArticle = sc.next();
-        if (containsArticle(nameOfArticle, activeCatalogue)) {
-            addIfNotInFavourites(user, favorites, nameOfArticle);
+        String articleName = sc.next();
+        if (containsArticle(articleName, activeCatalogue)) {
+            addIfNotInFavourites(user, favorites, articleName);
             System.out.println("Added successful!");
         } else {
             System.out.println("No such article!");
@@ -497,10 +493,10 @@ public class View {
         String afterDate = sc.next();
         System.out.print("Before (DD:MM:YYYY): ");
         String beforeDate = sc.next();
-        if (isValidDateFormat(afterDate) && isValidDateFormat(beforeDate)) {
-            Date after = getDate(afterDate);
-            Date before = getDate(beforeDate);
-            showArticlesByDateFrom(after, before, catalogue);
+        if (DateFormatting.isValidDateFormat(afterDate) && DateFormatting.isValidDateFormat(beforeDate)) {
+            Date after = DateFormatting.getDate(afterDate);
+            Date before = DateFormatting.getDate(beforeDate);
+            showArticlesFromDate(after, before, catalogue);
         } else {
             System.out.println("This is invalid format! Try again!");
         }
@@ -511,10 +507,10 @@ public class View {
         String afterDate = sc.next();
         System.out.print("Before (DD:MM:YYYY): ");
         String beforeDate = sc.next();
-        if (isValidDateFormat(afterDate) && isValidDateFormat(beforeDate)) {
-            Date after = getDate(afterDate);
-            Date before = getDate(beforeDate);
-            showArticlesByDeactivationDateFrom(after, before, catalogue);
+        if (DateFormatting.isValidDateFormat(afterDate) && DateFormatting.isValidDateFormat(beforeDate)) {
+            Date after = DateFormatting.getDate(afterDate);
+            Date before = DateFormatting.getDate(beforeDate);
+            showArticlesFromDeactivationDate(after, before, catalogue);
         } else {
             System.out.println("This is invalid format! Try again!");
         }
@@ -551,7 +547,7 @@ public class View {
         System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
         System.out.print("Insert password: ");
         String password = getValidPassword(sc);
-        registerUser(username, getHashPassword(password));
+        registerUser(username, PasswordHashing.getHashPassword(password));
         System.out.println("Registration successful!");
     }
 
@@ -560,7 +556,7 @@ public class View {
         boolean whileInvalid = true;
         while (whileInvalid) {
             try {
-                if (isValidPassword(password)){
+                if (PasswordValidator.isValidPassword(password)){
                     whileInvalid = false;
                 }
             } catch (InvalidPasswordException e) {
@@ -574,19 +570,19 @@ public class View {
     }
 
     private static void ReadFiles() throws IOException {
-        Map<String, Object> currMap = readFiles(User.class, USERS_JSON);
+        Map<String, Object> currMap = FileHandler.readFiles(User.class, USERS_JSON);
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             users.put(obj.getKey(), (User) obj.getValue());
         }
-        currMap = readFiles(Administrator.class, ADMINISTRATORS_JSON);
+        currMap = FileHandler.readFiles(Administrator.class, ADMINISTRATORS_JSON);
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             administrators.put(obj.getKey(), (Administrator) obj.getValue());
         }
-        currMap = readFiles(Article.class, CATALOGUE_JSON);
+        currMap = FileHandler.readFiles(Article.class, CATALOGUE_JSON);
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             catalogue.put(obj.getKey(), (Article) obj.getValue());
         }
-        currMap = readFiles(String.class, CATEGORIES_JSON);
+        currMap = FileHandler.readFiles(String.class, CATEGORIES_JSON);
         for (Map.Entry<String, Object> obj : currMap.entrySet()) {
             categories.put(obj.getKey(), (String) obj.getValue());
         }

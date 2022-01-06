@@ -9,7 +9,7 @@ public class InvalidPasswordException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Invalid password!" + invalidPassword;
+        return "Invalid password -> " + invalidPassword;
     }
 
 }

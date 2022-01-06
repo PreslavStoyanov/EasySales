@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Article;
 import Model.User;
 
 import java.io.IOException;
@@ -7,10 +8,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static Constants.BasicConstants.USERS_JSON;
+import static Controller.CatalogueController.catalogue;
 import static Utilities.FileHandler.*;
 
 public class UserController {
     public static Map<String, User> users = new LinkedHashMap<>();
+
+    public static void addIfNotInFavourites(User user, LinkedHashMap<String, Article> favorites, String articleName) throws IOException {
+        if (favorites.containsKey(articleName)) {
+            System.out.println("This article is already in favourites!");
+        } else {
+            user.addToFavourites(catalogue.get(articleName));
+            System.out.println("Item added!");
+        }
+    }
 
     public static boolean containsUser(String username) {
         return users.containsKey(username);

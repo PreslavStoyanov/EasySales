@@ -1,17 +1,1 @@
-{
-  "Natalia": {
-    "username": "Natalia",
-    "password": "a03485127c45228f65f75070c3aba035",
-    "favorites": {}
-  },
-  "Presli": {
-    "username": "Presli",
-    "password": "57c5d5e739492128417dbdf941f29bc9",
-    "favorites": {}
-  },
-  "PreslavSt": {
-    "username": "PreslavSt",
-    "password": "2fb7fb08bd504a9d18b442dbaa9edce9",
-    "favorites": {}
-  }
-}
+{"Natalia":{"username":"Natalia","password":"a03485127c45228f65f75070c3aba035","favorites":{}},"Presli":{"username":"Presli","password":"57c5d5e739492128417dbdf941f29bc9","favorites":{}},"PreslavSt":{"username":"PreslavSt","password":"2fb7fb08bd504a9d18b442dbaa9edce9","favorites":{}}}

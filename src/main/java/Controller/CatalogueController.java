@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.Article;
-import Model.User;
 
 import java.io.IOException;
 import java.util.Date;
@@ -16,8 +15,8 @@ import static Controller.UserController.users;
 public class CatalogueController {
     public static LinkedHashMap<String, Article> catalogue = new LinkedHashMap<>();
 
-    public static void showArticlesByDeactivationDateFrom(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> map) {
-        for (Map.Entry<String, Article> article : map.entrySet()) {
+    public static void showArticlesFromDeactivationDate(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> articles) {
+        for (Map.Entry<String, Article> article : articles.entrySet()) {
             if (article.getValue().getDateOfDeactivation().after(dateAfter) && article.getValue().getDateOfDeactivation().before(dateBefore)) {
                 System.out.printf("%s | %.2f BGN | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                         article.getValue().getCategory(), article.getValue().getOwnerName());
@@ -25,8 +24,8 @@ public class CatalogueController {
         }
     }
 
-    public static void showArticlesByDateFrom(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> map) {
-        for (Map.Entry<String, Article> article : map.entrySet()) {
+    public static void showArticlesFromDate(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> articles) {
+        for (Map.Entry<String, Article> article : articles.entrySet()) {
             if (article.getValue().getDate().after(dateAfter) && article.getValue().getDate().before(dateBefore)) {
                 System.out.printf("%s | %.2f BGN | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                         article.getValue().getCategory(), article.getValue().getActivateMessage(), article.getValue().getOwnerName());
@@ -35,36 +34,27 @@ public class CatalogueController {
     }
 
     public static LinkedHashMap<String, Article> getActiveArticles() {
-        LinkedHashMap<String, Article> mapToReturn = new LinkedHashMap<>();
+        LinkedHashMap<String, Article> activeArticles = new LinkedHashMap<>();
         for (Map.Entry<String, Article> article : catalogue.entrySet()) {
             if (article.getValue().isActive()) {
-                mapToReturn.put(article.getKey(), article.getValue());
+                activeArticles.put(article.getKey(), article.getValue());
             }
         }
-        return mapToReturn;
+        return activeArticles;
     }
 
     public static LinkedHashMap<String, Article> getInactiveArticles() {
-        LinkedHashMap<String, Article> mapToReturn = new LinkedHashMap<>();
+        LinkedHashMap<String, Article> inactiveArticles = new LinkedHashMap<>();
         for (Map.Entry<String, Article> article : catalogue.entrySet()) {
             if (!article.getValue().isActive()) {
-                mapToReturn.put(article.getKey(), article.getValue());
+                inactiveArticles.put(article.getKey(), article.getValue());
             }
         }
-        return mapToReturn;
+        return inactiveArticles;
     }
 
-    public static boolean containsArticle(String nameOfArticle, Map<String, Article> map) {
-        return map.containsKey(nameOfArticle);
-    }
-
-    public static void addIfNotInFavourites(User user, LinkedHashMap<String, Article> favorites, String nameOfArticle) throws IOException {
-        if (favorites.containsKey(nameOfArticle)) {
-            System.out.println("This article is already in favourites!");
-        } else {
-            user.addToFavourites(catalogue.get(nameOfArticle));
-            System.out.println("Item added!");
-        }
+    public static boolean containsArticle(String articleName, Map<String, Article> articles) {
+        return articles.containsKey(articleName);
     }
 
     public static void setArticleKey(String newKey, String oldKey) throws IOException {
@@ -76,22 +66,22 @@ public class CatalogueController {
         updateFiles(USERS_JSON, users);
     }
 
-    public static void deleteArticle(String nameOfArticle) throws IOException {
-        catalogue.remove(nameOfArticle);
+    public static void deleteArticle(String articleName) throws IOException {
+        catalogue.remove(articleName);
         updateFiles(CATALOGUE_JSON, catalogue);
     }
 
-    public static void addArticle(String nameOfArticle, Article article) throws IOException {
-        catalogue.put(nameOfArticle, article);
+    public static void addArticle(String articleName, Article article) throws IOException {
+        catalogue.put(articleName, article);
         updateFiles(CATALOGUE_JSON, catalogue);
     }
 
-    public static void showArticlesFrom(Map<String, Article> map) {
-        if (map.isEmpty()) {
+    public static void showArticlesFrom(Map<String, Article> articles) {
+        if (articles.isEmpty()) {
             System.out.println("No articles!");
             return;
         }
-        for (Map.Entry<String, Article> article : map.entrySet()) {
+        for (Map.Entry<String, Article> article : articles.entrySet()) {
             System.out.printf("%s | %.2f BGN | %s | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                     article.getValue().getCategory(), article.getValue().getActivateMessage(), article.getValue().getOwnerName());
         }
@@ -111,12 +101,12 @@ public class CatalogueController {
     }
 
     public static LinkedHashMap<String, Article> getArticlesByUser(String userName) {
-        LinkedHashMap<String, Article> mapToReturn = new LinkedHashMap<>();
+        LinkedHashMap<String, Article> userArticles = new LinkedHashMap<>();
         for (Map.Entry<String, Article> article : catalogue.entrySet()) {
             if (article.getValue().getOwnerName().equals(userName)) {
-                mapToReturn.put(article.getKey(), article.getValue());
+                userArticles.put(article.getKey(), article.getValue());
             }
         }
-        return mapToReturn;
+        return userArticles;
     }
 }
