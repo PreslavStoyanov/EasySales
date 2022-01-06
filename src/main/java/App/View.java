@@ -4,7 +4,7 @@ import Exceptions.InvalidPasswordException;
 import Model.Administrator;
 import Model.Article;
 import Model.User;
-import Utilities.ContainsUsername;
+import Utilities.PasswordValidator;
 
 import java.io.IOException;
 import java.util.Date;
@@ -18,9 +18,7 @@ import static Controller.CatalogueController.*;
 import static Controller.FileController.readFiles;
 import static Controller.UserController.*;
 import static Model.Administrator.showCategories;
-import static Utilities.DateFormatting.getDate;
-import static Utilities.DateFormatting.isValidDateFormat;
-import static Utilities.PasswordValidator.getValidPassword;
+import static Utilities.DateFormatting.*;
 import static Utilities.PasswordValidator.isRightPassword;
 
 public class View {
@@ -208,8 +206,10 @@ public class View {
         System.out.print("Type your old password: ");
         String oldPassword = sc.next();
         if (isRightPassword(oldPassword, administrator.getPassword())) {
+            System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
             System.out.print("Type your new password: ");
-            changeAdministratorPassword(administrator, sc);
+            String newPassword = getValidPassword(sc);
+            changeAdministratorPassword(administrator, newPassword);
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
@@ -219,7 +219,7 @@ public class View {
     private static String ChangeAdministratorUsername(Scanner sc, String username) throws IOException {
         System.out.print("Type your new username: ");
         String newUsername = sc.next();
-        if (!ContainsUsername.containsUsername(newUsername)) {
+        if (!containsUser(newUsername) && !containsAdministrator(newUsername)) {
             changeAdministratorName(username, newUsername);
             System.out.println("Your name was changed!");
             username = newUsername;
@@ -330,8 +330,10 @@ public class View {
         System.out.print("Type your old password: ");
         String oldPassword = sc.next();
         if (isRightPassword(oldPassword, user.getPassword())) {
+            System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
             System.out.print("Type your new password: ");
-            changeUserPassword(user, sc);
+            String newPassword = getValidPassword(sc);
+            changeUserPassword(user, newPassword);
             System.out.println("Your password was changed!");
         } else {
             System.out.println("Wrong password!");
@@ -341,7 +343,7 @@ public class View {
     private static String ChangeUserUsername(Scanner sc, String username) throws IOException {
         System.out.print("Type your new username: ");
         String newUsername = sc.next();
-        if (!ContainsUsername.containsUsername(newUsername)) {
+        if (!containsUser(newUsername) && !containsAdministrator(newUsername)) {
             changeUserName(username, newUsername);
             System.out.println("Your name was changed!");
             username = newUsername;
@@ -541,15 +543,33 @@ public class View {
     private static void Register(Scanner sc) throws IOException, InvalidPasswordException {
         System.out.print("Insert username: ");
         String username = sc.next();
-        while (ContainsUsername.containsUsername(username)) {
+        while (containsUser(username) || containsAdministrator(username)) {
             System.out.println("Name taken!");
             System.out.print("Insert username: ");
             username = sc.next();
         }
+        System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
         System.out.print("Insert password: ");
         String password = getValidPassword(sc);
         registerUser(username, password);
         System.out.println("Registration successful!");
+    }
+
+    private static String getValidPassword(Scanner sc) {
+        String password = sc.next();
+        boolean whileInvalid = true;
+        while (whileInvalid) {
+            try {
+                PasswordValidator.isValidPassword(password);
+                whileInvalid = false;
+            } catch (InvalidPasswordException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Requirements: 8-15 characters, at least 1 number, 1 upper case, 1 lower case and 1 special symbol!");
+                System.out.print("Try again: ");
+                password = sc.next();
+            }
+        }
+        return password;
     }
 
     private static void ReadFiles() throws IOException {

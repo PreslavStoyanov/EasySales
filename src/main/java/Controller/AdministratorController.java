@@ -6,24 +6,28 @@ import Model.User;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import static Constants.BasicConstants.ADMINISTRATORS_JSON;
 import static Constants.BasicConstants.USERS_JSON;
 import static Controller.FileController.*;
 import static Controller.UserController.users;
 import static Utilities.PasswordHashing.getHashPassword;
-import static Utilities.PasswordValidator.getValidPassword;
+import static Utilities.PasswordValidator.isValidPassword;
 
 public class AdministratorController {
     public static Map<String, Administrator> administrators = new LinkedHashMap<>();
     public static Map<String, String> categories = new LinkedHashMap<>();
 
-    public static void changeAdministratorPassword(Administrator administrator, Scanner sc) throws IOException {
-        String newPassword = getValidPassword(sc);
-        newPassword = getHashPassword(newPassword);
-        administrators.get(administrator.getUsername()).setPassword(newPassword);
-        updateFiles(ADMINISTRATORS_JSON, users);
+    public static boolean containsAdministrator(String username) {
+        return administrators.containsKey(username);
+    }
+
+    public static void changeAdministratorPassword(Administrator administrator, String newPassword) throws IOException {
+        if (isValidPassword(newPassword)) {
+            newPassword = getHashPassword(newPassword);
+            administrators.get(administrator.getUsername()).setPassword(newPassword);
+            updateFiles(ADMINISTRATORS_JSON, users);
+        }
     }
 
     public static void changeAdministratorName(String oldName, String newName) throws IOException {

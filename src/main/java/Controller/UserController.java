@@ -5,21 +5,25 @@ import Model.User;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import static Constants.BasicConstants.USERS_JSON;
 import static Controller.FileController.*;
 import static Utilities.PasswordHashing.*;
-import static Utilities.PasswordValidator.getValidPassword;
+import static Utilities.PasswordValidator.isValidPassword;
 
 public class UserController {
     public static Map<String, User> users = new LinkedHashMap<>();
 
-    public static void changeUserPassword(User user, Scanner sc) throws IOException {
-        String newPassword = getValidPassword(sc);
-        newPassword = getHashPassword(newPassword);
-        users.get(user.getUsername()).setPassword(newPassword);
-        updateFiles(USERS_JSON, users);
+    public static boolean containsUser(String username) {
+        return users.containsKey(username);
+    }
+
+    public static void changeUserPassword(User user, String newPassword) throws IOException {
+        if (isValidPassword(newPassword)) {
+            newPassword = getHashPassword(newPassword);
+            users.get(user.getUsername()).setPassword(newPassword);
+            updateFiles(USERS_JSON, users);
+        }
     }
 
     public static void changeUserName(String oldName, String newName) throws IOException {
