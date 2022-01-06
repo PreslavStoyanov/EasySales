@@ -5,13 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static Constants.BasicConstants.USERS_JSON;
-import static Utilities.FileHandler.updateFiles;
 import static Controller.UserController.users;
+import static Utilities.FileHandler.updateFiles;
 
 public class User {
     private String username;
     private String password;
-    private LinkedHashMap<String, Article> favorites;
+    private final LinkedHashMap<String, Article> favorites;
 
     public User(String username, String password) {
         this(username, password, new LinkedHashMap<>());

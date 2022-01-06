@@ -9,12 +9,11 @@ import java.util.Map;
 
 import static Constants.BasicConstants.ADMINISTRATORS_JSON;
 import static Constants.BasicConstants.USERS_JSON;
-import static Utilities.FileHandler.*;
 import static Controller.UserController.users;
+import static Utilities.FileHandler.updateFiles;
 
 public class AdministratorController {
     public static Map<String, Administrator> administrators = new LinkedHashMap<>();
-
 
     public static boolean containsAdministrator(String username) {
         return administrators.containsKey(username);

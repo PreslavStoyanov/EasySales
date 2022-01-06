@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static Constants.BasicConstants.USERS_JSON;
 import static Controller.CatalogueController.catalogue;
-import static Utilities.FileHandler.*;
+import static Utilities.FileHandler.updateFiles;
 
 public class UserController {
     public static Map<String, User> users = new LinkedHashMap<>();

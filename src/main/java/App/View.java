@@ -1,8 +1,13 @@
 package App;
 
 import Exceptions.InvalidPasswordException;
-import Model.*;
-import Utilities.*;
+import Model.Administrator;
+import Model.Article;
+import Model.User;
+import Utilities.DateFormatting;
+import Utilities.FileHandler;
+import Utilities.PasswordHashing;
+import Utilities.PasswordValidator;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,10 +16,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static Constants.BasicConstants.*;
-import static Controller.UserController.*;
 import static Controller.AdministratorController.*;
 import static Controller.CatalogueController.*;
 import static Controller.CategoriesController.*;
+import static Controller.UserController.*;
 
 public class View {
     public static void main(String[] args) throws IOException, InvalidPasswordException {
@@ -389,7 +394,7 @@ public class View {
         System.out.print("Name of article: ");
         String articleName = sc.next();
         if (containsArticle(articleName, ownArticles)) {
-            catalogue.get(articleName).deactivate();
+            deactivate(articleName);
             System.out.println("Article deactivated!");
         } else {
             System.out.println("No such article!");
@@ -403,8 +408,7 @@ public class View {
             System.out.print("New name: ");
             String newName = sc.next();
             if (!catalogue.containsKey(articleName)) {
-                catalogue.get(articleName).setName(newName);
-                setArticleKey(newName, articleName);
+                changeArticlesName(articleName, newName);
                 System.out.println("Name changed!");
             } else {
                 System.out.println("This name is taken");
@@ -418,7 +422,7 @@ public class View {
         if (containsArticle(articleName, ownArticles)) {
             System.out.print("New price: ");
             double newPrice = sc.nextDouble();
-            catalogue.get(articleName).setPrice(newPrice);
+            changeArticlesPrice(articleName, newPrice);
             System.out.println("Price changed!");
         } else {
             System.out.println("No such article!");
@@ -556,7 +560,7 @@ public class View {
         boolean whileInvalid = true;
         while (whileInvalid) {
             try {
-                if (PasswordValidator.isValidPassword(password)){
+                if (PasswordValidator.isValidPassword(password)) {
                     whileInvalid = false;
                 }
             } catch (InvalidPasswordException e) {

@@ -1,12 +1,7 @@
 package Model;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
-
-import static Constants.BasicConstants.CATALOGUE_JSON;
-import static Controller.CatalogueController.catalogue;
-import static Utilities.FileHandler.updateFiles;
 
 public class Article {
     private String name;
@@ -15,7 +10,7 @@ public class Article {
     private final String ownerName;
     private final Date date;
     private boolean active;
-    private Date dateOfDeactivation;
+    private Date deactivationDate;
 
     public Article(String name, double price, String category, String ownerName) {
         this(name, price, category, ownerName, Date.valueOf(LocalDate.now()), true);
@@ -30,26 +25,24 @@ public class Article {
         this.active = status;
     }
 
-    public Date getDateOfDeactivation() {
-        return this.dateOfDeactivation;
+    public Date getDeactivationDate() {
+        return this.deactivationDate;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) throws IOException {
+    public void setName(String name) {
         this.name = name;
-        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) throws IOException {
+    public void setPrice(double price) {
         this.price = price;
-        updateFiles(CATALOGUE_JSON, catalogue);
     }
 
     public String getCategory() {
@@ -68,10 +61,12 @@ public class Article {
         return this.active;
     }
 
-    public void deactivate() throws IOException {
-        this.active = false;
-        this.dateOfDeactivation = Date.valueOf(LocalDate.now());
-        updateFiles(CATALOGUE_JSON, catalogue);
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setDeactivationDate() {
+        this.deactivationDate = Date.valueOf(LocalDate.now());
     }
 
     public String getActivateMessage() {

@@ -9,15 +9,15 @@ import java.util.Map;
 
 import static Constants.BasicConstants.CATALOGUE_JSON;
 import static Constants.BasicConstants.USERS_JSON;
-import static Utilities.FileHandler.updateFiles;
 import static Controller.UserController.users;
+import static Utilities.FileHandler.updateFiles;
 
 public class CatalogueController {
     public static LinkedHashMap<String, Article> catalogue = new LinkedHashMap<>();
 
     public static void showArticlesFromDeactivationDate(Date dateAfter, Date dateBefore, LinkedHashMap<String, Article> articles) {
         for (Map.Entry<String, Article> article : articles.entrySet()) {
-            if (article.getValue().getDateOfDeactivation().after(dateAfter) && article.getValue().getDateOfDeactivation().before(dateBefore)) {
+            if (article.getValue().getDeactivationDate().after(dateAfter) && article.getValue().getDeactivationDate().before(dateBefore)) {
                 System.out.printf("%s | %.2f BGN | %s | %s %n", article.getValue().getName(), article.getValue().getPrice(),
                         article.getValue().getCategory(), article.getValue().getOwnerName());
             }
@@ -53,29 +53,6 @@ public class CatalogueController {
         return inactiveArticles;
     }
 
-    public static boolean containsArticle(String articleName, Map<String, Article> articles) {
-        return articles.containsKey(articleName);
-    }
-
-    public static void setArticleKey(String newKey, String oldKey) throws IOException {
-        Article article = catalogue.get(oldKey);
-        catalogue.remove(oldKey);
-        catalogue.put(newKey, new Article(newKey, article.getPrice(),
-                article.getCategory(), article.getOwnerName(), article.getDate(), article.isActive()));
-        updateFiles(CATALOGUE_JSON, catalogue);
-        updateFiles(USERS_JSON, users);
-    }
-
-    public static void deleteArticle(String articleName) throws IOException {
-        catalogue.remove(articleName);
-        updateFiles(CATALOGUE_JSON, catalogue);
-    }
-
-    public static void addArticle(String articleName, Article article) throws IOException {
-        catalogue.put(articleName, article);
-        updateFiles(CATALOGUE_JSON, catalogue);
-    }
-
     public static void showArticlesFrom(Map<String, Article> articles) {
         if (articles.isEmpty()) {
             System.out.println("No articles!");
@@ -108,5 +85,44 @@ public class CatalogueController {
             }
         }
         return userArticles;
+    }
+
+    public static void deactivate(String articleName) throws IOException {
+        catalogue.get(articleName).setActive(false);
+        catalogue.get(articleName).setDeactivationDate();
+        updateFiles(CATALOGUE_JSON, catalogue);
+    }
+
+    public static void setArticleKey(String newKey, String oldKey) {
+        Article article = catalogue.get(oldKey);
+        catalogue.remove(oldKey);
+        catalogue.put(newKey, new Article(newKey, article.getPrice(),
+                article.getCategory(), article.getOwnerName(), article.getDate(), article.isActive()));
+    }
+
+    public static void changeArticlesName(String articleName, String newName) throws IOException {
+        catalogue.get(articleName).setName(newName);
+        setArticleKey(newName, articleName);
+        updateFiles(CATALOGUE_JSON, catalogue);
+        updateFiles(USERS_JSON, users);
+    }
+
+    public static void changeArticlesPrice(String articleName, Double newPrice) throws IOException {
+        catalogue.get(articleName).setPrice(newPrice);
+        updateFiles(CATALOGUE_JSON, catalogue);
+    }
+
+    public static boolean containsArticle(String articleName, Map<String, Article> articles) {
+        return articles.containsKey(articleName);
+    }
+
+    public static void deleteArticle(String articleName) throws IOException {
+        catalogue.remove(articleName);
+        updateFiles(CATALOGUE_JSON, catalogue);
+    }
+
+    public static void addArticle(String articleName, Article article) throws IOException {
+        catalogue.put(articleName, article);
+        updateFiles(CATALOGUE_JSON, catalogue);
     }
 }
