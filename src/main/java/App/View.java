@@ -183,8 +183,7 @@ public class View {
         String nameOfAdministrator = sc.next();
         if (!administrators.containsKey(nameOfAdministrator)) {
             System.out.println("No such administrator!");
-            System.out.print("Name of administrator to remove: ");
-            nameOfAdministrator = sc.next();
+            return;
         }
         removeAdministrator(administrators.get(nameOfAdministrator));
         System.out.println("Administrator removed!");
@@ -195,8 +194,7 @@ public class View {
         String nameOfUser = sc.next();
         if (!users.containsKey(nameOfUser)) {
             System.out.println("No such user!");
-            System.out.print("Name of user to add: ");
-            nameOfUser = sc.next();
+            return;
         }
         addAdministrator(users.get(nameOfUser));
         System.out.println("Administrator added!");
@@ -256,7 +254,7 @@ public class View {
             System.out.print("New name of category: ");
             String newNameOfCategory = sc.next();
             if (!containsCategory(newNameOfCategory)) {
-                setCategoryName(nameOfCategory, newNameOfCategory);
+                setCategoryName(newNameOfCategory, nameOfCategory);
                 System.out.println("Category changed!");
             } else {
                 System.out.println("This name is taken");
@@ -285,11 +283,11 @@ public class View {
     }
 
     private static void ShowInactiveArticles(Scanner sc, LinkedHashMap<String, Article> inactiveCatalogue) {
+        showArticlesFrom(inactiveCatalogue);
         System.out.println("To filter them by deactivation date press '1'");
         System.out.println("To go back press '0'");
         int option = sc.nextInt();
-        while (option != 1) {
-            showArticlesFrom(inactiveCatalogue);
+        while (option == 1) {
             FilterByDeactivationDate(sc, inactiveCatalogue);
             System.out.println("To filter them by deactivation date press '1'");
             System.out.println("To go back press '0'");
@@ -298,11 +296,11 @@ public class View {
     }
 
     private static void ShowActiveArticles(Scanner sc, LinkedHashMap<String, Article> activeCatalogue) {
+        showArticlesFrom(activeCatalogue);
         System.out.println("To filter them by date press '1'");
         System.out.println("To go back press '0'");
         int option = sc.nextInt();
-        while (option != 1) {
-            showArticlesFrom(activeCatalogue);
+        while (option == 1) {
             FilterByDate(sc, activeCatalogue);
             System.out.println("To filter them by date press '1'");
             System.out.println("To go back press '0'");
@@ -356,14 +354,13 @@ public class View {
     private static void SeeFavorites(Scanner sc, User user, LinkedHashMap<String, Article> favorites) throws IOException {
         if (favorites.isEmpty()) {
             System.out.println("Your favourite list is empty!");
-            System.out.println();
             return;
         }
+        user.showFavourites();
         System.out.println("To remove article from favourite press '1'");
         System.out.println("To go back press '0'");
         int option = sc.nextInt();
-        while (option != 1) {
-            user.showFavourites();
+        while (option == 1) {
 
             System.out.print("Name of article: ");
             String articleName = sc.next();
